@@ -10,6 +10,8 @@ import { useId } from 'react'
 import { RiDraggable } from 'react-icons/ri'
 import { sortByOrder } from '@/util/sort'
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 function SortableItem({ id, children }: { id: string; children: React.ReactNode }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id })
 

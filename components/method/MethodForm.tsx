@@ -9,7 +9,7 @@ import { FaCheckCircle, FaPlus, FaTimes, FaTimesCircle } from 'react-icons/fa'
 import { methodsAtom } from '@/lib/atom'
 import { addMethod, updateMethod } from '@/lib/client'
 import { MethodFormFields, MethodSchema } from '@/lib/formSchema'
-import { Button, Input, SubmitButton } from '../ui'
+import { Button, Input, SubmitButton, Textarea } from '../ui'
 
 export default function MethodForm({ recipeId, method, onCloseForm }: { recipeId: string; method?: Method; onCloseForm?: () => void }) {
   const {
@@ -17,13 +17,13 @@ export default function MethodForm({ recipeId, method, onCloseForm }: { recipeId
     reset,
     register,
     setError,
+    setFocus,
     formState: { isSubmitSuccessful, errors, dirtyFields },
   } = useForm<MethodFormFields>({
     resolver: zodResolver(MethodSchema),
     defaultValues: {
       step: method?.step ?? '',
-      hour: method?.hour ?? undefined,
-      minute: method?.minute ?? undefined,
+      stepTime: method?.stepTime ?? undefined,
     },
   })
   const [methods, setMethods] = useAtom(methodsAtom)
@@ -46,6 +46,7 @@ export default function MethodForm({ recipeId, method, onCloseForm }: { recipeId
     if (response.method) {
       setMethods([...(editing ? methods.filter(item => item.id !== method.id) : methods), response.method])
       onCancel()
+      !editing && setFocus('step')
     }
   }
 
@@ -56,11 +57,16 @@ export default function MethodForm({ recipeId, method, onCloseForm }: { recipeId
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="my-2 w-full">
       <div className="flex flex-row items-center space-x-2">
-        <Input type="text" placeholder="Step..." {...register('step')} error={errors.step} />
-        <Input type="number" min={0} placeholder="Hours..." {...register('hour')} error={errors.hour} />
-        <Input type="number" min={0} placeholder="Minutes..." {...register('minute')} error={errors.minute} />
+        <Textarea placeholder="Step..." {...register('step')} error={errors.step} />
 
         <div className="flex justify-end space-x-2">
+          <div className="relative">
+            <Input className="w-36 pr-12" type="number" min={0} step={1} placeholder="Time..." {...register('stepTime')} error={errors.stepTime} />
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+              <span className="text-slate-500">min</span>
+            </div>
+          </div>
+
           {editing ? (
             <>
               <Button title="Cancel" onClick={() => onCancel()}>

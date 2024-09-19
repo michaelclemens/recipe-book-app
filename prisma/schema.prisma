@@ -25,6 +25,10 @@ enum Unit {
 model Recipe {
   id          String       @id @default(cuid())
   name        String
+  summary     String?
+  prepTime    Int?
+  cookTime    Int?
+  serves      Int?
   ingredients Ingredient[]
   methods     Method[]
   createdAt   DateTime     @default(now())
@@ -36,6 +40,8 @@ model Ingredient {
   recipe    Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
   recipeId  String
   name      String
+  prep      String?
+  optional  Boolean?
   quantity  Int?
   unitValue Float?
   unit      Unit?
@@ -45,13 +51,12 @@ model Ingredient {
 }
 
 model Method {
-  id            String   @id @default(cuid())
-  recipe        Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
-  recipeId      String
-  step          String
-  hour          Int?
-  minute        Int?
-  order         Int?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id        String   @id @default(cuid())
+  recipe    Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId  String
+  step      String
+  stepTime  Int?
+  order     Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

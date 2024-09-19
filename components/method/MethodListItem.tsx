@@ -46,12 +46,7 @@ export default function MethodListItem({ method, onDelete }: { method: Method; o
           <div className="ml-3 flex-auto">{method.step}</div>
           <div className="flex flex-col items-end">
             <div className="flex items-center gap-x-2">
-              {(method.hour || method.minute) && (
-                <div className="flex flex-col items-end">
-                  {method.hour && `${method.hour}hr`}
-                  {method.minute && ` ${method.minute}min`}
-                </div>
-              )}
+              {method.stepTime && <div className="flex flex-col items-end pr-1">{method.stepTime} min</div>}
               <Button title="Edit" onClick={() => setEditing(true)}>
                 <FaEdit />
               </Button>

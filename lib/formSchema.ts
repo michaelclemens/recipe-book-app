@@ -8,6 +8,7 @@ export type RecipeFormFields = z.infer<typeof RecipeSchema>
 
 export const IngredientSchema = z.object({
   name: z.string().min(1, { message: 'Ingredient name is required' }),
+  optional: z.boolean().optional(),
   quantity: z.coerce
     .number()
     .int()
@@ -16,7 +17,7 @@ export const IngredientSchema = z.object({
     .or(z.literal('').transform(() => undefined)),
   unitValue: z.coerce
     .number()
-    .int()
+    .multipleOf(0.1)
     .positive()
     .optional()
     .or(z.literal('').transform(() => undefined)),
@@ -29,13 +30,7 @@ export type IngredientFormFields = z.infer<typeof IngredientSchema>
 
 export const MethodSchema = z.object({
   step: z.string().min(1, { message: 'Method step is required' }),
-  hour: z.coerce
-    .number()
-    .int()
-    .positive()
-    .optional()
-    .or(z.literal('').transform(() => undefined)),
-  minute: z.coerce
+  stepTime: z.coerce
     .number()
     .int()
     .positive()

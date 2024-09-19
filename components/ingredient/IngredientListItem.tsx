@@ -54,6 +54,7 @@ export default function IngredientListItem({
               </div>
             )}
             <div className="capitalize">{ingredient.name}</div>
+            {ingredient.optional && <div>(optional)</div>}
           </div>
           <div className="flex flex-col items-end">
             <div className="flex items-center gap-x-2">

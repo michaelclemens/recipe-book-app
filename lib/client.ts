@@ -16,6 +16,8 @@ const parseZodErrors = (error: ZodError) => {
   return errors
 }
 
+export type RecipeFull = RecipeFormFields & { ingredients: IngredientFormFields[]; methods: MethodFormFields[] }
+
 export const createRecipe = async (data: RecipeFormFields) => {
   let recipe, errors
   try {

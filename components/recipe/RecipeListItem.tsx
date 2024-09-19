@@ -12,7 +12,7 @@ export default function RecipeListItem({ recipe }: { recipe: Recipe }) {
   }
   return (
     <div key={recipe.id} className="flex flex-grow flex-row items-center justify-between space-x-2">
-      <div>{recipe.name}</div>
+      <div className="mr-2">{recipe.name}</div>
       <div className="flex justify-end space-x-2">
         <Link href={`/recipe/${recipe.id}`}>
           <Button title="Edit">
