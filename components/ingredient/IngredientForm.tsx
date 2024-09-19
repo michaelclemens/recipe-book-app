@@ -80,7 +80,7 @@ export default function IngredientForm({
             </Select>
           </div>
         </div>
-        <Input type="text" placeholder="Ingredient..." {...register('name')} error={errors.name} />
+        <Input className="capitalize" type="text" placeholder="Ingredient..." {...register('name')} error={errors.name} />
 
         <div className="flex justify-end space-x-2">
           {editing ? (

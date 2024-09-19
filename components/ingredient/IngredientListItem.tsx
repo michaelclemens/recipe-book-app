@@ -41,25 +41,29 @@ export default function IngredientListItem({
 }) {
   const [editing, setEditing] = useState(false)
   return (
-    <div className="flex min-h-14 flex-grow flex-row items-center justify-between space-x-2">
+    <div className="flex min-h-14 w-full flex-row items-center space-x-2">
       {editing ? (
         <IngredientForm recipeId={ingredient.recipeId} ingredient={ingredient} onCloseForm={() => setEditing(false)} />
       ) : (
         <>
-          {ingredient.quantity && <div>{ingredient.quantity}</div>}
-          {ingredient.unitValue && (
-            <div>
-              {ingredient.unitValue} {ingredient.unit && unitLabelMap[ingredient.unit]}
+          <div className="flex flex-auto space-x-2">
+            {ingredient.quantity && <div>{ingredient.quantity}</div>}
+            {ingredient.unitValue && (
+              <div>
+                {ingredient.unitValue} {ingredient.unit && unitLabelMap[ingredient.unit]}
+              </div>
+            )}
+            <div className="capitalize">{ingredient.name}</div>
+          </div>
+          <div className="flex flex-col items-end">
+            <div className="flex items-center gap-x-2">
+              <Button title="Edit" onClick={() => setEditing(true)}>
+                <FaEdit />
+              </Button>
+              <Button title="Delete" onClick={async () => onDelete(ingredient)}>
+                <FaTrashAlt />
+              </Button>
             </div>
-          )}
-          <div>{ingredient.name}</div>
-          <div className="flex justify-end space-x-2">
-            <Button title="Edit" onClick={() => setEditing(true)}>
-              <FaEdit />
-            </Button>
-            <Button title="Delete" onClick={async () => onDelete(ingredient)}>
-              <FaTrashAlt />
-            </Button>
           </div>
         </>
       )}

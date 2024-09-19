@@ -38,25 +38,27 @@ export function MethodListWrapper({ methods: initialMethods }: { methods: Method
 export default function MethodListItem({ method, onDelete }: { method: Method; onDelete: (method: Method) => Promise<void> }) {
   const [editing, setEditing] = useState(false)
   return (
-    <div className="ml-1 flex min-h-14 flex-grow flex-row items-center justify-between space-x-2">
+    <div className="ml-1 grid min-h-14 w-full grid-flow-col items-center justify-stretch space-x-2">
       {editing ? (
         <MethodForm recipeId={method.recipeId} method={method} onCloseForm={() => setEditing(false)} />
       ) : (
         <>
-          <div className="ml-3">{method.step}</div>
-          {(method.hour || method.minute) && (
-            <div>
-              {method.hour && `${method.hour}hr`}
-              {method.minute && ` ${method.minute}min`}
+          <div className="ml-3 flex-auto">{method.step}</div>
+          <div className="flex flex-col items-end">
+            <div className="flex items-center gap-x-2">
+              {(method.hour || method.minute) && (
+                <div className="flex flex-col items-end">
+                  {method.hour && `${method.hour}hr`}
+                  {method.minute && ` ${method.minute}min`}
+                </div>
+              )}
+              <Button title="Edit" onClick={() => setEditing(true)}>
+                <FaEdit />
+              </Button>
+              <Button title="Delete" onClick={() => onDelete(method)}>
+                <FaTrashAlt />
+              </Button>
             </div>
-          )}
-          <div className="flex justify-end space-x-2">
-            <Button title="Edit" onClick={() => setEditing(true)}>
-              <FaEdit />
-            </Button>
-            <Button title="Delete" onClick={() => onDelete(method)}>
-              <FaTrashAlt />
-            </Button>
           </div>
         </>
       )}

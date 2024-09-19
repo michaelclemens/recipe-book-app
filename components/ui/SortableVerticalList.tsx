@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import { closestCenter, DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
@@ -8,8 +9,6 @@ import { CSS } from '@dnd-kit/utilities'
 import { useId } from 'react'
 import { RiDraggable } from 'react-icons/ri'
 import { sortByOrder } from '@/util/sort'
-
-type SortItem = { id: string; order: number | null; createdAt: Date }
 
 function SortableItem({ id, children }: { id: string; children: React.ReactNode }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id })
@@ -35,9 +34,9 @@ export default function SortableVerticalList({
   children,
   onNewSortOrder,
 }: {
-  items: SortItem[]
-  children: (item: SortItem) => React.ReactNode
-  onNewSortOrder: (sortedItems: SortItem[]) => Promise<void>
+  items: any[]
+  children: (item: any) => React.ReactNode
+  onNewSortOrder: (sortedItems: any[]) => Promise<void>
 }) {
   const id = useId()
   const sensors = useSensors(useSensor(PointerSensor))
