@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import { closestCenter, DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
@@ -9,10 +8,6 @@ import { CSS } from '@dnd-kit/utilities'
 import { useId } from 'react'
 import { RiDraggable } from 'react-icons/ri'
 import { sortByOrder } from '@/util/sort'
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 function SortableItem({ id, children }: { id: string; children: React.ReactNode }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id })
@@ -38,8 +33,11 @@ export default function SortableVerticalList({
   children,
   onNewSortOrder,
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   items: any[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   children: (item: any) => React.ReactNode
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onNewSortOrder: (sortedItems: any[]) => Promise<void>
 }) {
   const id = useId()
