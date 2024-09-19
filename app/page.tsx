@@ -7,7 +7,9 @@ export default function Home() {
     <main className="mx-auto flex w-1/3 flex-col items-center justify-center">
       <RecipeList />
       <Link href="/recipe/create">
-        <Button className="text-slate-300">Create New Recipe</Button>
+        <Button className="text-slate-300" title="Create">
+          Create New Recipe
+        </Button>
       </Link>
     </main>
   )
