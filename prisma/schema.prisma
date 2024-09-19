@@ -12,3 +12,46 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum Unit {
+  Teaspoon
+  Tablespoon
+  Gram
+  Kilogram
+  Millilitre
+  Litre
+}
+
+model Recipe {
+  id          String       @id @default(cuid())
+  name        String
+  ingredients Ingredient[]
+  methods     Method[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Ingredient {
+  id        String   @id @default(cuid())
+  recipe    Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId  String
+  name      String
+  quantity  Int?
+  unitValue Float?
+  unit      Unit?
+  order     Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Method {
+  id            String   @id @default(cuid())
+  recipe        Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId      String
+  step          String
+  hour          Int?
+  minute        Int?
+  order         Int?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}

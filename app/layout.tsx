@@ -1,5 +1,7 @@
+import { Provider } from 'jotai'
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
+import Link from 'next/link'
 import './globals.css'
 
 const geistSans = localFont({
@@ -25,7 +27,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <Provider>
+          <header className="flex w-full p-6">
+            <Link href="/">Home</Link>
+          </header>
+          {children}
+        </Provider>
+      </body>
     </html>
   )
 }
