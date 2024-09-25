@@ -26,8 +26,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} flex h-screen w-screen flex-col overflow-hidden p-5 antialiased`}>
-        <header className="flex w-full px-6 pb-6 pt-1">
+      <body className={`${geistSans.variable} ${geistMono.variable} flex h-screen w-screen flex-col overflow-hidden antialiased`}>
+        <header className="flex w-full p-5">
           <Link href="/">Home</Link>
         </header>
         {children}

@@ -21,18 +21,22 @@ const processExtraRecipes = async () => {
   }
 }
 
+const mockRecipeCount = 20
+
 const main = async () => {
   try {
     await emptyDb()
 
-    const recipe = createMockRecipe()
-    await prisma.recipe.create({ data: recipe })
+    for (let i = 0; i < mockRecipeCount; i++) {
+      const recipe = createMockRecipe()
+      await prisma.recipe.create({ data: recipe })
 
-    const ingredients = createMockIngredients(recipe.id, 10)
-    await prisma.ingredient.createMany({ data: ingredients })
+      const ingredients = createMockIngredients(recipe.id, 10)
+      await prisma.ingredient.createMany({ data: ingredients })
 
-    const methods = createMockMethods(recipe.id, 5)
-    await prisma.method.createMany({ data: methods })
+      const methods = createMockMethods(recipe.id, 5)
+      await prisma.method.createMany({ data: methods })
+    }
 
     await processExtraRecipes()
 

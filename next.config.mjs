@@ -4,6 +4,18 @@ const nextConfig = {
   eslint: {
     dirs: ['app', 'components', 'hooks', 'lib', 'test', 'types', 'util'],
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'loremflickr.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+    ],
+  },
 }
 
 export default nextConfig

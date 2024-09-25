@@ -5,6 +5,7 @@ import cuid from 'cuid'
 export const createMockRecipe = (): Recipe => ({
   id: cuid(),
   name: faker.food.dish(),
+  imageSrc: faker.image.urlLoremFlickr({ category: 'food,meal,dish', width: 1280, height: 800 }),
   summary: null,
   prepTime: null,
   cookTime: null,
@@ -16,15 +17,18 @@ export const createMockRecipe = (): Recipe => ({
 export const createMockIngredients = (recipeId: string, count: number = 1) => {
   const ingredients: Ingredient[] = []
   for (let i = 0; i < count; i++) {
+    const unitValue = faker.helpers.maybe(() => faker.number.float({ min: 1, max: 500, multipleOf: 0.5 }), { probability: 0.7 }) ?? null
     ingredients.push({
       id: cuid(),
       recipeId,
       name: faker.food.ingredient(),
       prep: null,
       optional: null,
-      quantity: faker.helpers.maybe(() => faker.number.int({ min: 1, max: 5 }), { probability: 0.7 }) ?? null,
-      unitValue: faker.helpers.maybe(() => faker.number.float({ min: 0.1, max: 1000, multipleOf: 0.25 }), { probability: 0.7 }) ?? null,
-      unit: faker.helpers.maybe(() => faker.helpers.enumValue(Unit), { probability: 0.7 }) ?? null,
+      quantity: unitValue
+        ? (faker.helpers.maybe(() => faker.number.int({ min: 1, max: 5 }), { probability: 0.7 }) ?? null)
+        : faker.number.int({ min: 1, max: 5 }),
+      unitValue,
+      unit: unitValue ? faker.helpers.enumValue(Unit) : null,
       order: null,
       createdAt: faker.date.recent(),
       updatedAt: faker.date.recent(),

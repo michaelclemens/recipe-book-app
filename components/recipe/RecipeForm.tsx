@@ -29,7 +29,7 @@ export default function RecipeForm() {
     }
 
     if (response.recipe) {
-      push(`/recipe/${response.recipe.id}`)
+      push(`/recipe/create/${response.recipe.id}`)
     }
   }
 

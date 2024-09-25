@@ -10,6 +10,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [require('@tailwindcss/forms'), require('tailwind-scrollbar')],
+  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography'), require('tailwind-scrollbar')],
 }
 export default config

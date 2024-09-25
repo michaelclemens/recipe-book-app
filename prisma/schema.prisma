@@ -26,6 +26,7 @@ model Recipe {
   id          String       @id @default(cuid())
   name        String
   summary     String?
+  imageSrc    String?
   prepTime    Int?
   cookTime    Int?
   serves      Int?

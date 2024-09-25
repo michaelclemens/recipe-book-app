@@ -34,9 +34,12 @@ export const createRecipe = async (data: RecipeFormFields) => {
   }
 }
 
-export const getRecipes = async () => {
+export const getRecipes = async (query: string, page: number, limit: number = 10) => {
   try {
-    return await prisma.recipe.findMany({ orderBy: { createdAt: 'asc' } })
+    return await prisma.$transaction([
+      prisma.recipe.count(),
+      prisma.recipe.findMany({ skip: page > 1 ? (page - 1) * limit : undefined, orderBy: { createdAt: 'asc' }, take: limit }),
+    ])
   } catch (error) {
     console.error(error)
     return []

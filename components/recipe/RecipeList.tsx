@@ -1,14 +1,15 @@
 import { getRecipes } from '@/lib/client'
-import { sortByDate } from '@/util/sort'
-import RecipeListItem from './RecipeListItem'
+import RecipeGallery from './RecipeGallery'
 
-export default async function RecipeList() {
-  const recipes = await getRecipes()
+const recipeCount = 12
+
+export default async function RecipeList({ query, currentPage }: { query: string; currentPage: number }) {
+  const [totalCount, recipes] = await getRecipes(query, currentPage, recipeCount)
+  const totalPages = Math.ceil(totalCount / recipeCount)
+
   return (
-    <div className="mb-7 space-y-5">
-      {recipes.sort(sortByDate).map(recipe => (
-        <RecipeListItem key={recipe.id} recipe={recipe} />
-      ))}
+    <div className="relative mb-5 p-2">
+      <RecipeGallery recipes={recipes} totalPages={totalPages} />
     </div>
   )
 }
