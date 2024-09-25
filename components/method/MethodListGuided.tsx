@@ -1,21 +1,8 @@
 'use client'
 
 import { Method } from '@prisma/client'
-import {
-  AnimatePresence,
-  motion,
-  MotionValue,
-  Transition,
-  useAnimation,
-  useInView,
-  useMotionValue,
-  useScroll,
-  useSpring,
-  useTransform,
-  Variants,
-} from 'framer-motion'
-import Link from 'next/link'
-import { Dispatch, Ref, RefObject, SetStateAction, useEffect, useRef, useState } from 'react'
+import { motion, useMotionValue, Variants } from 'framer-motion'
+import { Dispatch, SetStateAction, useRef, useState } from 'react'
 import { sortByOrder } from '@/util/sort'
 
 const DRAG_BUFFER = 20
@@ -55,15 +42,7 @@ const Dots = ({ imgIndex, methods, setImgIndex }: { imgIndex: number; methods: M
   )
 }
 
-export default function MethodListGuided({
-  recipeId,
-  methods: initialMethods,
-  currentStep,
-}: {
-  recipeId: string
-  methods: Method[]
-  currentStep: number
-}) {
+export default function MethodListGuided({ methods: initialMethods }: { methods: Method[] }) {
   const methods = initialMethods.sort(sortByOrder)
   const [imgIndex, setImgIndex] = useState(0)
   const dragY = useMotionValue(0)
