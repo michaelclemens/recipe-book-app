@@ -48,11 +48,7 @@ export default function IngredientListItem({
         <>
           <div className="flex flex-auto space-x-2">
             {ingredient.quantity && <div>{ingredient.quantity}</div>}
-            {ingredient.unitValue && (
-              <div>
-                {ingredient.unitValue} {ingredient.unit && unitLabelMap[ingredient.unit]}
-              </div>
-            )}
+            {ingredient.unit && <div>{ingredient.unit}</div>}
             <div className="capitalize">{ingredient.name}</div>
             {ingredient.optional && <div>(optional)</div>}
           </div>

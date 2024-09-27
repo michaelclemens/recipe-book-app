@@ -2,11 +2,11 @@
 
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Recipe } from '@prisma/client'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, Variants } from 'framer-motion'
 import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
-import { FaClone, FaCog, FaTrashAlt } from 'react-icons/fa'
+import { FaClone, FaCog, FaTimes, FaTrashAlt } from 'react-icons/fa'
 import { GiHotMeal } from 'react-icons/gi'
 import { IoEllipsisVertical } from 'react-icons/io5'
 import { deleteRecipe } from '@/lib/client'
@@ -15,6 +15,11 @@ import Loader from '../ui/Loader'
 import Pagination from '../ui/Pagination'
 
 const fallbackImageSrc = 'https://loremflickr.com/580/256/food,meal,dish'
+
+const buttonIcon: Variants = {
+  hidden: { x: -10, opacity: 0, transition: { duration: 0.2, type: 'spring' } },
+  visible: { x: 0, opacity: 1, transition: { delay: 0.2, duration: 0.3, type: 'spring' } },
+}
 
 function RecipeGalleryItem({ recipe, onSelect }: { recipe: Recipe; onSelect: (recipe: Recipe) => void }) {
   const { push } = useRouter()
@@ -32,16 +37,15 @@ function RecipeGalleryItem({ recipe, onSelect }: { recipe: Recipe; onSelect: (re
   }
 
   return (
-    <motion.li className="group/item relative flex h-64 flex-grow rounded-md shadow-sm md:h-60" key={recipe.id} layoutId={recipe.id}>
+    <motion.li layoutId={recipe.id} className="group relative flex h-64 flex-grow rounded-md shadow-sm md:h-56">
       <div className="relative z-10 flex flex-grow flex-col items-center">
         <Menu>
-          <div className="flex w-full gap-2 rounded-t-lg bg-black/70 px-2 pb-3 pt-2">
+          <div className="flex w-full items-center gap-2 rounded-t-lg bg-black/70 px-2 pb-3 pt-2">
             <h3 className="w-full text-left text-xl font-bold leading-6 text-slate-200">{recipe.name}</h3>
             <div className="relative inline-block">
               <MenuButton
-                as="button"
                 title="Options menu"
-                className="h-5 w-5 pt-1 text-slate-200 opacity-60 transition-opacity duration-300 hover:opacity-100"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-200 opacity-60 outline outline-1 outline-slate-400/40 transition-opacity duration-300 hover:opacity-100"
               >
                 <IoEllipsisVertical size="1.25rem" />
               </MenuButton>
@@ -81,19 +85,23 @@ function RecipeGalleryItem({ recipe, onSelect }: { recipe: Recipe; onSelect: (re
             </div>
           </div>
         </Menu>
-        <div className="flex w-full flex-grow items-end">
-          <button
-            onClick={() => onSelect(recipe)}
-            title="Let's start cooking!"
-            className="flex w-full justify-center rounded-b-lg bg-black/70 px-2 pb-2 pt-3 text-xl font-bold text-slate-200 opacity-0 transition-all duration-300 group-hover/item:opacity-90 hover:bg-black/90 hover:opacity-100"
+
+        <div className="flex w-full flex-grow cursor-pointer items-end" title="Let's start cooking!" onClick={() => onSelect(recipe)}>
+          <motion.button
+            initial="hidden"
+            animate="hidden"
+            whileHover="visible"
+            className="flex w-full justify-center rounded-b-lg bg-black/90 px-2 pb-2 pt-3 text-xl font-bold text-slate-200 opacity-0 transition-opacity duration-300 group-hover:opacity-90"
           >
             <span>Let&lsquo;s Cook</span>
-            <GiHotMeal className="ml-2" size="1.25rem" />
-          </button>
+            <motion.span variants={buttonIcon} className="ml-2">
+              <GiHotMeal />
+            </motion.span>
+          </motion.button>
         </div>
       </div>
       <Image
-        className="z-0 h-full w-full rounded-lg object-cover object-center brightness-90 transition-all duration-300 group-hover/item:brightness-110"
+        className="z-0 h-full w-full rounded-lg object-cover object-center brightness-90 transition-all duration-300 group-hover:brightness-110"
         src={recipe.imageSrc ? recipe.imageSrc : fallbackImageSrc}
         alt="Recipe image"
         quality={60}
@@ -106,28 +114,35 @@ function RecipeGalleryItem({ recipe, onSelect }: { recipe: Recipe; onSelect: (re
   )
 }
 
-function SingleRecipe({ recipe }: { recipe: Recipe }) {
+function SingleRecipe({ recipe, onClose }: { recipe: Recipe; onClose: () => void }) {
   const { push } = useRouter()
   return (
-    <div className="absolute bottom-0 left-0 right-0 top-0 z-30 mx-auto flex h-[35rem] w-screen items-start justify-start px-5 md:h-[50rem] lg:h-[40rem] xl:my-auto xl:w-[80rem] xl:items-center xl:justify-start xl:p-0">
+    <div className="absolute bottom-0 left-0 right-0 top-0 z-40 mx-auto flex h-1/3 w-screen max-w-7xl items-start justify-start p-2 sm:h-5/6 sm:p-5 lg:-mt-10 lg:h-[90%] lg:p-10">
       <motion.div layoutId={recipe.id} className="relative h-full w-full rounded-md bg-slate-900">
-        <div className="relative z-40 flex h-full flex-grow flex-col">
-          <div className="flex w-full items-center justify-center gap-2 rounded-t-lg bg-black/70 px-5 pb-8 pt-7">
-            <h1 className="text-center text-5xl font-bold text-slate-200">{recipe.name}</h1>
+        <div className="relative z-10 flex h-full flex-grow flex-col text-xl md:text-5xl">
+          <div className="flex w-full items-center justify-center gap-2 rounded-t-lg bg-black/70 px-3 pb-5 pt-4 md:px-5 md:pb-8 md:pt-7">
+            <h1 className="w-full text-center font-bold text-slate-200">{recipe.name}</h1>
+            <div className="inline-flex justify-end">
+              <button title="Close" onClick={onClose} className="opacity-50 transition-opacity duration-300 hover:opacity-90">
+                <FaTimes />
+              </button>
+            </div>
           </div>
           <div className="flex w-full flex-grow items-end">
-            <button
+            <motion.button
               onClick={() => push(`/recipe/cook/${recipe.id}`, { scroll: false })}
               title="Let's start cooking!"
-              className="flex w-full justify-center rounded-b-lg bg-black/70 px-5 pb-7 pt-8 text-5xl font-bold text-slate-200 transition-all duration-300 group-hover/item:opacity-90 hover:bg-black/90 hover:opacity-100"
+              className="flex w-full justify-center rounded-b-lg bg-black/70 px-3 pb-5 pt-4 font-bold text-slate-200 transition-all duration-300 group-hover:opacity-90 hover:bg-black/90 hover:opacity-100 md:px-5 md:pb-8 md:pt-7"
             >
               <span>Start Cooking!</span>
-              <GiHotMeal className="ml-4" size="2.75rem" />
-            </button>
+              <span className="ml-4 animate-[bounce_2s_linear_infinite]">
+                <GiHotMeal />
+              </span>
+            </motion.button>
           </div>
         </div>
         <Image
-          className="z-30 h-full w-full rounded-lg object-cover object-center"
+          className="z-0 h-full w-full rounded-lg object-cover object-center"
           src={recipe.imageSrc ? recipe.imageSrc : fallbackImageSrc}
           alt={`Recipe ${recipe.name} image`}
           quality={80}
@@ -152,10 +167,10 @@ export default function RecipeGallery({ recipes, totalPages }: { recipes: Recipe
   }
 
   return (
-    <>
+    <div className="relative mb-5 p-2">
       <ul
         role="list"
-        className="relative grid max-h-screen grid-cols-1 items-stretch justify-between gap-5 overflow-y-auto rounded-lg pr-2 scrollbar scrollbar-track-transparent scrollbar-thumb-slate-800 sm:grid-cols-2 lg:grid-cols-4 lg:bg-slate-900 lg:p-5"
+        className="relative grid max-h-[47rem] grid-cols-1 items-stretch justify-between gap-5 overflow-y-auto rounded-lg pb-5 pr-2 scrollbar scrollbar-track-transparent scrollbar-thumb-slate-800 sm:grid-cols-2 lg:grid-cols-4 lg:bg-slate-900 lg:p-5"
       >
         {recipes.sort(sortByDate).map(recipe => (
           <RecipeGalleryItem key={recipe.id} recipe={recipe} onSelect={(recipe: Recipe) => setSelectedRecipe(recipe)} />
@@ -169,16 +184,16 @@ export default function RecipeGallery({ recipes, totalPages }: { recipes: Recipe
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             key="overlay"
-            className="fixed bottom-0 left-0 right-0 top-0 z-10 h-screen w-screen cursor-pointer bg-black/70"
+            className="fixed left-0 top-0 z-30 h-screen w-screen cursor-pointer bg-black/70"
             onClick={onDeselect}
           />
         )}
 
-        {selectedRecipe && <SingleRecipe key="image" recipe={selectedRecipe} />}
+        {selectedRecipe && <SingleRecipe key="image" recipe={selectedRecipe} onClose={onDeselect} />}
       </AnimatePresence>
-      <div className="mt-5 flex w-full justify-center">
+      <div className="sticky bottom-0 left-0 flex w-full items-center justify-center py-5">
         <Pagination totalPages={totalPages} />
       </div>
-    </>
+    </div>
   )
 }

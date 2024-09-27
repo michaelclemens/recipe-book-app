@@ -1,25 +1,26 @@
 import { createMockIngredients, createMockMethods, createMockRecipe } from '@/test/mock'
 import prisma from '@/lib/prisma'
-import extraRecipes from './seed-extra'
+
+// import extraRecipes from './seed-extra'
 
 const emptyDb = async () => {
   await prisma.recipe.deleteMany()
 }
 
-const processExtraRecipes = async () => {
-  if (!extraRecipes) return
+// const processExtraRecipes = async () => {
+//   if (!extraRecipes) return
 
-  for (const recipe of extraRecipes) {
-    await prisma.recipe.create({
-      data: {
-        name: recipe.name,
-        ingredients: { createMany: { data: recipe.ingredients } },
-        methods: { createMany: { data: recipe.methods } },
-      },
-      include: { ingredients: true, methods: true },
-    })
-  }
-}
+//   for (const recipe of extraRecipes) {
+//     await prisma.recipe.create({
+//       data: {
+//         name: recipe.name,
+//         ingredients: { createMany: { data: recipe.ingredients } },
+//         methods: { createMany: { data: recipe.methods } },
+//       },
+//       include: { ingredients: true, methods: true },
+//     })
+//   }
+// }
 
 const mockRecipeCount = 20
 
@@ -38,7 +39,7 @@ const main = async () => {
       await prisma.method.createMany({ data: methods })
     }
 
-    await processExtraRecipes()
+    // await processExtraRecipes()
 
     console.log(`Database has been seeded. 🌱`)
   } catch (error) {

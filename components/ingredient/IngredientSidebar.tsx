@@ -2,7 +2,6 @@
 
 import { Ingredient } from '@prisma/client'
 import { motion } from 'framer-motion'
-import { unitLabelMap } from '@/util/unit'
 
 const list = {
   visible: {
@@ -28,8 +27,8 @@ const list = {
 }
 
 const item = {
-  visible: { opacity: 1, x: 0, width: 'auto', height: 'auto', transition: { type: 'tween', ease: 'easeIn', duration: 0.4 } },
-  hidden: { opacity: 0, x: -10, width: 0, height: 0, transition: { type: 'tween', ease: 'easeOut', duration: 0.2 } },
+  visible: { opacity: 1, x: 0, width: 'auto', height: 'auto', flexGrow: 1, transition: { type: 'tween', ease: 'easeIn', duration: 0.4 } },
+  hidden: { opacity: 0, x: -10, width: 0, height: 0, flexGrow: 0, transition: { type: 'tween', ease: 'easeOut', duration: 0.2 } },
 }
 
 export default function IngredientSidebar({ ingredients }: { ingredients: Ingredient[] }) {
@@ -45,11 +44,7 @@ export default function IngredientSidebar({ ingredients }: { ingredients: Ingred
           <li key={ingredient.id} className="mr-3 flex last-of-type:pb-5">
             <motion.div variants={item} className={`mr-3 flex flex-shrink-0 space-x-2 overflow-hidden`}>
               {ingredient.quantity && <span>{ingredient.quantity} qty</span>}
-              {ingredient.unitValue && (
-                <span>
-                  {ingredient.unitValue} {ingredient.unit && unitLabelMap[ingredient.unit]}
-                </span>
-              )}
+              {ingredient.unit && <span>{ingredient.unit}</span>}
             </motion.div>
 
             <div className="flex flex-shrink-0 capitalize">{ingredient.name}</div>

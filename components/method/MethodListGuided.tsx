@@ -90,7 +90,7 @@ export default function MethodListGuided({ methods: initialMethods }: { methods:
                 variants={item}
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ root: ref, amount: 'all' }}
+                viewport={{ root: ref, amount: 0.7 }}
                 className="h-full w-full shrink-0 snap-start list-decimal text-3xl leading-snug opacity-20"
               >
                 {method.step}

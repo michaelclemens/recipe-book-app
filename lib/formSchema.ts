@@ -1,4 +1,4 @@
-import { Unit } from '@prisma/client'
+import { unitLabelMap } from '@/util/unit'
 import { z } from 'zod'
 
 export const RecipeSchema = z.object({
@@ -11,18 +11,12 @@ export const IngredientSchema = z.object({
   optional: z.boolean().optional(),
   quantity: z.coerce
     .number()
-    .int()
-    .positive()
-    .optional()
-    .or(z.literal('').transform(() => undefined)),
-  unitValue: z.coerce
-    .number()
     .multipleOf(0.1)
     .positive()
     .optional()
     .or(z.literal('').transform(() => undefined)),
   unit: z
-    .nativeEnum(Unit, { message: 'Invalid unit' })
+    .nativeEnum(unitLabelMap, { message: 'Invalid unit' })
     .optional()
     .or(z.literal('').transform(() => undefined)),
 })

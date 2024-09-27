@@ -8,8 +8,6 @@ export default async function RecipeList({ query, currentPage }: { query: string
   const totalPages = Math.ceil(totalCount / recipeCount)
 
   return (
-    <div className="relative mb-5 p-2">
-      <RecipeGallery recipes={recipes} totalPages={totalPages} />
-    </div>
+    <RecipeGallery recipes={recipes} totalPages={totalPages} />
   )
 }

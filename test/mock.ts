@@ -1,11 +1,12 @@
 import { faker } from '@faker-js/faker'
-import { Ingredient, Method, Recipe, Unit } from '@prisma/client'
+import { Ingredient, Method, Recipe } from '@prisma/client'
 import cuid from 'cuid'
+import { unitLabelMap } from '@/util/unit'
 
 export const createMockRecipe = (): Recipe => ({
   id: cuid(),
   name: faker.food.dish(),
-  imageSrc: faker.image.urlLoremFlickr({ category: 'food,meal,dish', width: 1280, height: 800 }),
+  imageSrc: faker.image.urlLoremFlickr({ category: 'food,dish', width: 800, height: 450 }),
   summary: null,
   prepTime: null,
   cookTime: null,
@@ -17,18 +18,15 @@ export const createMockRecipe = (): Recipe => ({
 export const createMockIngredients = (recipeId: string, count: number = 1) => {
   const ingredients: Ingredient[] = []
   for (let i = 0; i < count; i++) {
-    const unitValue = faker.helpers.maybe(() => faker.number.float({ min: 1, max: 500, multipleOf: 0.5 }), { probability: 0.7 }) ?? null
+    const quantity = faker.helpers.maybe(() => faker.number.float({ min: 1, max: 500, multipleOf: 0.5 }), { probability: 0.7 }) ?? null
     ingredients.push({
       id: cuid(),
       recipeId,
       name: faker.food.ingredient(),
-      prep: null,
+      preparation: null,
       optional: null,
-      quantity: unitValue
-        ? (faker.helpers.maybe(() => faker.number.int({ min: 1, max: 5 }), { probability: 0.7 }) ?? null)
-        : faker.number.int({ min: 1, max: 5 }),
-      unitValue,
-      unit: unitValue ? faker.helpers.enumValue(Unit) : null,
+      quantity: quantity,
+      unit: quantity ? faker.helpers.enumValue(unitLabelMap) : null,
       order: null,
       createdAt: faker.date.recent(),
       updatedAt: faker.date.recent(),

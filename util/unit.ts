@@ -1,10 +1,8 @@
-import { Unit } from '@prisma/client'
-
 export const unitLabelMap = {
-  [Unit.Teaspoon]: 'tsp',
-  [Unit.Tablespoon]: 'tbsp',
-  [Unit.Gram]: 'g',
-  [Unit.Kilogram]: 'kg',
-  [Unit.Millilitre]: 'ml',
-  [Unit.Litre]: 'l',
+  Teaspoon: 'tsp',
+  Tablespoon: 'tbsp',
+  Gram: 'g',
+  Kilogram: 'kg',
+  Millilitre: 'ml',
+  Litre: 'l',
 }

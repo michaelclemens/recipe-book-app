@@ -13,15 +13,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Unit {
-  Teaspoon
-  Tablespoon
-  Gram
-  Kilogram
-  Millilitre
-  Litre
-}
-
 model Recipe {
   id          String       @id @default(cuid())
   name        String
@@ -37,18 +28,17 @@ model Recipe {
 }
 
 model Ingredient {
-  id        String   @id @default(cuid())
-  recipe    Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
-  recipeId  String
-  name      String
-  prep      String?
-  optional  Boolean?
-  quantity  Int?
-  unitValue Float?
-  unit      Unit?
-  order     Int?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  recipe      Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId    String
+  name        String
+  quantity    Float?
+  unit        String?
+  preparation String?
+  optional    Boolean?
+  order       Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Method {
