@@ -117,7 +117,7 @@ export default function RecipeGallery({ recipes, totalPages }: { recipes: Recipe
         </button>
       </form>
 
-      <div className="grid h-full grid-cols-1 gap-5 overflow-y-auto px-5 pb-px scrollbar scrollbar-track-transparent scrollbar-thumb-slate-800 sm:grid-cols-2 lg:grid-cols-5 lg:grid-rows-2 lg:px-0">
+      <div className="grid h-full grid-cols-1 gap-5 overflow-y-auto px-5 pb-px scrollbar scrollbar-track-transparent scrollbar-thumb-slate-800 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 xl:grid-rows-2 xl:px-0">
         {recipes.sort(sortByDate).map(recipe => (
           <Polariod key={recipe.id} className="group relative cursor-pointer" onClick={() => setRecipe(recipe)}>
             <div className="relative w-full flex-grow">

@@ -12,7 +12,7 @@ export default async function Home({ searchParams }: { searchParams?: { query?: 
   const [totalCount, recipes] = await getRecipes(query, currentPage, recipeCount)
   const totalPages = Math.ceil(totalCount / recipeCount)
   return (
-    <main className="mx-auto h-full w-full max-w-[90rem]">
+    <main className="h-full w-full xl:px-10">
       {/* <Link href="/recipe/create" className="ml-2">
         <Button className="text-slate-300" title="Create New Recipe">
           Create New Recipe
