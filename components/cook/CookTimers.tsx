@@ -47,7 +47,10 @@ export default function CookTimers() {
   const [cookTimers] = useAtom(cookTimersAtom)
   return (
     <div className="flex h-full w-full flex-row overflow-hidden p-5">
-      <div ref={ref} className="flex w-full flex-wrap overflow-y-auto overflow-x-hidden scrollbar scrollbar-track-transparent scrollbar-thumb-neutral-500/50 gap-5">
+      <div
+        ref={ref}
+        className="flex w-full flex-wrap gap-5 overflow-y-auto overflow-x-hidden scrollbar scrollbar-track-transparent scrollbar-thumb-neutral-500/50"
+      >
         {cookTimers.sort().map(cookTimer => (
           <PostIt key={cookTimer.methodId}>
             <div className={`${marker.className} -mt-12 text-center text-3xl text-red-700`}>Step {cookTimer.stepNo}</div>

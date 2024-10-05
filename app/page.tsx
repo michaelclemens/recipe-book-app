@@ -1,18 +1,26 @@
-import Link from 'next/link'
-import RecipeList from '@/components/recipe/RecipeList'
-import { Button } from '@/components/ui'
+// import Link from 'next/link'
+import { getRecipes } from '@/lib/client'
+import RecipeGallery from '@/components/recipe/RecipeGallery'
 
-export default function Home({ searchParams }: { searchParams?: { query?: string; page?: string } }) {
+// import { Button } from '@/components/ui'
+
+const recipeCount = 10
+
+export default async function Home({ searchParams }: { searchParams?: { query?: string; page?: string } }) {
   const query = searchParams?.query || ''
   const currentPage = Number(searchParams?.page) || 1
+  const [totalCount, recipes] = await getRecipes(query, currentPage, recipeCount)
+  const totalPages = Math.ceil(totalCount / recipeCount)
   return (
-    <main className="mx-auto w-full max-w-[90rem] h-full">
+    <main className="mx-auto h-full w-full max-w-[90rem]">
       {/* <Link href="/recipe/create" className="ml-2">
         <Button className="text-slate-300" title="Create New Recipe">
           Create New Recipe
         </Button>
       </Link> */}
-      <RecipeList query={query} currentPage={currentPage} />
+      <div className="flex h-full flex-col">
+        <RecipeGallery recipes={recipes} totalPages={totalPages} />
+      </div>
     </main>
   )
 }

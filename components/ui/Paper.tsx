@@ -30,7 +30,7 @@ const PaperTextareaComponent = (props: TextareaProps, inputRef: ForwardedRef<Ref
   return (
     <Textarea
       ref={e => {
-        inputRef && typeof inputRef === 'function' && inputRef(e as any)
+        inputRef && typeof inputRef === 'function' && inputRef(e as unknown as RefCallBack)
         textareaRef.current = e
       }}
       rows={1}
