@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react'
-import Home from './page'
+import Home from './page animation'
 
 jest.mock('@/components/recipe/RecipeList')
 

@@ -6,12 +6,12 @@ export default function Home({ searchParams }: { searchParams?: { query?: string
   const query = searchParams?.query || ''
   const currentPage = Number(searchParams?.page) || 1
   return (
-    <main className="mx-auto w-full max-w-[90rem]">
-      <Link href="/recipe/create" className="ml-2">
+    <main className="mx-auto w-full max-w-[90rem] h-full">
+      {/* <Link href="/recipe/create" className="ml-2">
         <Button className="text-slate-300" title="Create New Recipe">
           Create New Recipe
         </Button>
-      </Link>
+      </Link> */}
       <RecipeList query={query} currentPage={currentPage} />
     </main>
   )

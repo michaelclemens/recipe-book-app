@@ -1,3 +1,4 @@
+import { Provider } from 'jotai'
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import Link from 'next/link'
@@ -25,13 +26,15 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} flex h-screen w-screen flex-col overflow-hidden antialiased`}>
-        <header className="flex w-full p-5">
-          <Link href="/">Home</Link>
-        </header>
-        {children}
-      </body>
-    </html>
+    <Provider>
+      <html lang="en">
+        <body className={`${geistSans.variable} ${geistMono.variable} flex h-screen w-screen flex-col overflow-hidden antialiased`}>
+          <header className="flex w-full p-5">
+            <Link href="/">Home</Link>
+          </header>
+          {children}
+        </body>
+      </html>
+    </Provider>
   )
 }

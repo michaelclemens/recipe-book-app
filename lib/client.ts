@@ -38,7 +38,12 @@ export const getRecipes = async (query: string, page: number, limit: number = 10
   try {
     return await prisma.$transaction([
       prisma.recipe.count(),
-      prisma.recipe.findMany({ skip: page > 1 ? (page - 1) * limit : undefined, orderBy: { createdAt: 'asc' }, take: limit }),
+      prisma.recipe.findMany({
+        where: query ? { name: { contains: query, mode: 'insensitive' } } : undefined,
+        skip: page > 1 ? (page - 1) * limit : undefined,
+        orderBy: { createdAt: 'asc' },
+        take: limit,
+      }),
     ])
   } catch (error) {
     console.error(error)

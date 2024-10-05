@@ -1,0 +1,14 @@
+.postIt {
+  width: 200px;
+  height: 175px;
+  position: relative;
+  padding: 10px;
+  border: 1px solid #eded6fd2;
+  border-top: 40px solid #f8f880;
+  border-bottom-right-radius: 60px 5px;
+  background: #ffff88;
+  background: linear-gradient(135deg, #ffff88 82%, #fafabd 100%);
+  color: rgb(10, 10, 10);
+  box-shadow: 15px 15px 10px -5px rgb(0 0 0 / 0.15);
+}
+

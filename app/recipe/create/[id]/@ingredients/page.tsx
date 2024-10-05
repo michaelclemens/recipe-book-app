@@ -1,11 +1,17 @@
+import { getIngredients } from '@/lib/client'
 import IngredientForm from '@/components/ingredient/IngredientForm'
 import IngredientList from '@/components/ingredient/IngredientList'
+import Paper, { PaperRow } from '@/components/ui/Paper'
 
 export default async function IngredientsPage({ params: { id } }: { params: { id: string } }) {
+  const ingredients = await getIngredients(id)
   return (
-    <div className="flex h-full flex-col overflow-hidden pt-5">
-      <IngredientForm recipeId={id} />
-      <IngredientList recipeId={id} />
+    <div className="flex flex-col overflow-hidden">
+      <Paper>
+        <PaperRow className="mb-7 underline underline-offset-4">Ingredients</PaperRow>
+        <IngredientForm recipeId={id} />
+        <IngredientList ingredients={ingredients} />
+      </Paper>
     </div>
   )
 }

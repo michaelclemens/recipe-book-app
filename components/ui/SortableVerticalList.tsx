@@ -9,7 +9,7 @@ import { useId } from 'react'
 import { RiDraggable } from 'react-icons/ri'
 import { sortByOrder } from '@/util/sort'
 
-function SortableItem({ id, children }: { id: string; children: React.ReactNode }) {
+function SortableItem({ id, children, className = '' }: { id: string; children: React.ReactNode; className?: string }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id })
 
   const style = {
@@ -19,9 +19,13 @@ function SortableItem({ id, children }: { id: string; children: React.ReactNode 
   }
 
   return (
-    <div ref={setNodeRef} style={style} className="flex items-center">
-      <div {...listeners} {...attributes} className="mr-2 text-slate-800 transition-colors duration-500 hover:text-slate-400 active:cursor-move">
-        <RiDraggable title="Move" size="1.25em" />
+    <div ref={setNodeRef} style={style} className={`${className} group flex w-full snap-start`}>
+      <div
+        {...listeners}
+        {...attributes}
+        className="mr-2 text-neutral-950 opacity-0 transition-opacity duration-500 hover:opacity-80 active:cursor-grabbing group-hover:[&:not(:hover)]:opacity-30"
+      >
+        <RiDraggable title="Move item" />
       </div>
       {children}
     </div>
@@ -31,14 +35,16 @@ function SortableItem({ id, children }: { id: string; children: React.ReactNode 
 export default function SortableVerticalList({
   items,
   children,
-  onNewSortOrder,
+  onSort,
+  itemClassName = '',
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   items: any[]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   children: (item: any) => React.ReactNode
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onNewSortOrder: (sortedItems: any[]) => Promise<void>
+  onSort: (sortedItems: any[]) => Promise<void>
+  itemClassName?: string
 }) {
   const id = useId()
   const sensors = useSensors(useSensor(PointerSensor))
@@ -53,7 +59,7 @@ export default function SortableVerticalList({
       const newIndex = items.findIndex(item => item.id === over.id)
 
       const newItems = arrayMove(items, oldIndex, newIndex).map((item, index) => ({ ...item, order: index + 1 }))
-      await onNewSortOrder(newItems)
+      await onSort(newItems)
     }
   }
 
@@ -67,7 +73,7 @@ export default function SortableVerticalList({
     >
       <SortableContext items={items} strategy={verticalListSortingStrategy}>
         {items.sort(sortByOrder).map(item => (
-          <SortableItem key={item.id} id={item.id}>
+          <SortableItem key={item.id} id={item.id} className={itemClassName}>
             {children(item)}
           </SortableItem>
         ))}
