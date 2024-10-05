@@ -1,19 +1,8 @@
 import { Provider } from 'jotai'
 import type { Metadata } from 'next'
-import localFont from 'next/font/local'
 import Link from 'next/link'
 import './globals.css'
 
-const geistSans = localFont({
-  src: './fonts/GeistVF.woff',
-  variable: '--font-geist-sans',
-  weight: '100 900',
-})
-const geistMono = localFont({
-  src: './fonts/GeistMonoVF.woff',
-  variable: '--font-geist-mono',
-  weight: '100 900',
-})
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -28,7 +17,7 @@ export default function RootLayout({
   return (
     <Provider>
       <html lang="en">
-        <body className={`${geistSans.variable} ${geistMono.variable} flex h-screen w-screen flex-col overflow-hidden antialiased`}>
+        <body className={`flex h-screen w-screen flex-col overflow-hidden antialiased`}>
           <header className="flex w-full p-5">
             <Link href="/">Home</Link>
           </header>
