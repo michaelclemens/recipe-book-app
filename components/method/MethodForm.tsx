@@ -2,12 +2,10 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Method } from '@prisma/client'
-import { useAtom } from 'jotai'
-import { FieldPath, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { FaCheck, FaPlus, FaTimes, FaTrashAlt } from 'react-icons/fa'
-import { methodsAtom } from '@/lib/atom'
-import { addMethod, updateMethod } from '@/lib/client'
 import { MethodFormFields, MethodSchema } from '@/lib/formSchema'
+import { useMethodMutations } from '@/hooks/useMethods'
 import { PaperInput, PaperRow, PaperTextarea } from '../ui/Paper'
 
 export default function MethodForm({
@@ -22,10 +20,9 @@ export default function MethodForm({
   const {
     handleSubmit,
     register,
-    setError,
     setFocus,
     reset,
-    formState: { dirtyFields },
+    formState: { dirtyFields, errors },
   } = useForm<MethodFormFields>({
     resolver: zodResolver(MethodSchema),
     defaultValues: {
@@ -33,32 +30,38 @@ export default function MethodForm({
       stepTime: method?.stepTime ?? undefined,
     },
   })
-  const [methods, setMethods] = useAtom(methodsAtom)
+  const { addMethod, updateMethod } = useMethodMutations(recipeId)
   const hasDirtyFields = Object.keys(dirtyFields).length > 0
 
   const onSubmit = async (data: MethodFormFields) => {
-    const response = method ? await updateMethod(method.id, data) : await addMethod(recipeId, data)
+    const editing = !!method
+    editing ? await updateMethod(method.id, data) : await addMethod(data)
 
-    if (response.errors) {
-      for (const { path, message } of response.errors) {
-        setError(path as FieldPath<MethodFormFields>, { message })
-      }
+    if (!editing) {
+      reset()
+      setFocus('step')
     }
 
-    if (response.method) {
-      setMethods([...(method ? methods.filter(item => item.id !== method.id) : methods), response.method])
-      if (!method) {
-        reset()
-        setFocus('step')
-      }
-    }
+    // if (response.errors) {
+    //   for (const { path, message } of response.errors) {
+    //     setError(path as FieldPath<MethodFormFields>, { message })
+    //   }
+    // }
   }
 
   return (
     <PaperRow>
       <form onSubmit={handleSubmit(onSubmit)} className="group flex w-full items-start gap-2">
-        <PaperTextarea className="h-full w-full resize-none" placeholder="Step..." {...register('step')} />
-        <PaperInput type="number" step={1} min={0} className="w-20" placeholder="Time..." {...register('stepTime')} />
+        <PaperTextarea className="h-full w-full resize-none" placeholder="Step..." {...register('step')} error={errors.step} />
+        <PaperInput
+          type="number"
+          step={1}
+          min={0}
+          className="w-20 text-center"
+          placeholder="Time..."
+          {...register('stepTime')}
+          error={errors.stepTime}
+        />
 
         <div className="ml-2 mt-1 flex items-center justify-center gap-2 text-lg opacity-0 transition-opacity delay-100 duration-300 group-hover:opacity-100">
           {method ? (

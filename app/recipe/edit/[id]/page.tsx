@@ -1,9 +1,12 @@
+'use client'
+
 import Image from 'next/image'
-import { getRecipe } from '@/lib/client'
+import useRecipe from '@/hooks/useRecipe'
 import Polariod from '@/components/ui/Polariod'
 
-export default async function RecipePage({ params: { id } }: { params: { id: string } }) {
-  const recipe = await getRecipe(id)
+export default function RecipePage({ params: { id } }: { params: { id: string } }) {
+  const { recipe } = useRecipe(id)
+  if (!recipe) return
   return (
     <div className="flex items-center px-10">
       <Polariod className="max-w-96 -rotate-6" pinned>

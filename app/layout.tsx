@@ -1,6 +1,6 @@
-import { Provider } from 'jotai'
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { ReactQueryClientProvider } from '@/components/ReactQueryClientProvider'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -14,7 +14,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <Provider>
+    <ReactQueryClientProvider>
       <html lang="en">
         <body className={`flex h-screen w-screen flex-col overflow-hidden antialiased`}>
           <header className="flex w-full p-5">
@@ -23,6 +23,6 @@ export default function RootLayout({
           {children}
         </body>
       </html>
-    </Provider>
+    </ReactQueryClientProvider>
   )
 }

@@ -7,13 +7,13 @@ import { useAtom } from 'jotai'
 import { useResetAtom } from 'jotai/utils'
 import { useEffect, useState } from 'react'
 import { cookTimersAtom } from '@/lib/atom'
-import { sortByOrder } from '@/util/sort'
+import useMethods from '@/hooks/useMethods'
 import Paper, { PaperRow } from '../ui/Paper'
 
 const dragBuffer = 150
 
-export default function MethodListGuided({ methods: initialMethods }: { methods: Method[] }) {
-  const methods = initialMethods.sort(sortByOrder)
+export default function MethodListGuided({ recipeId }: { recipeId: string }) {
+  const methods = useMethods(recipeId)
   const [current, setCurrent] = useState(methods[0])
   const [completed, setCompleted] = useState<string[]>([])
   const dragX = useMotionValue(0)

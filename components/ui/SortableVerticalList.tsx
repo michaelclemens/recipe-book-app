@@ -7,7 +7,6 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useId } from 'react'
 import { RiDraggable } from 'react-icons/ri'
-import { sortByOrder } from '@/util/sort'
 
 function SortableItem({ id, children, className = '' }: { id: string; children: React.ReactNode; className?: string }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id })
@@ -72,7 +71,7 @@ export default function SortableVerticalList({
       onDragEnd={onDragEnd}
     >
       <SortableContext items={items} strategy={verticalListSortingStrategy}>
-        {items.sort(sortByOrder).map(item => (
+        {items.map(item => (
           <SortableItem key={item.id} id={item.id} className={itemClassName}>
             {children(item)}
           </SortableItem>

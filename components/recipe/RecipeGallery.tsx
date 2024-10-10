@@ -3,18 +3,26 @@
 import { Recipe } from '@prisma/client'
 import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { FormEvent, useState } from 'react'
 import { FaClone, FaCog, FaTimes, FaTrashAlt } from 'react-icons/fa'
 import { FaMagnifyingGlass } from 'react-icons/fa6'
 import { GiHotMeal } from 'react-icons/gi'
-import { deleteRecipe } from '@/lib/client'
-import { sortByDate } from '@/util/sort'
+import useFilterParams from '@/hooks/useFilterParams'
+import useRecipes, { useRecipeMutations } from '@/hooks/useRecipes'
 import Loader from '../ui/Loader'
 import Pagination from '../ui/Pagination'
 import Polariod from '../ui/Polariod'
 
-const SelectedRecipe = ({ recipe, onDeselect }: { recipe: Recipe; onDeselect: () => void }) => {
+const SelectedRecipe = ({
+  recipe,
+  onDeselect,
+  onDelete,
+}: {
+  recipe: Recipe
+  onDeselect: () => void
+  onDelete: (recipe: Recipe) => Promise<void>
+}) => {
   const { push } = useRouter()
   const [loading, setLoading] = useState(false)
 
@@ -25,13 +33,14 @@ const SelectedRecipe = ({ recipe, onDeselect }: { recipe: Recipe; onDeselect: ()
 
   const onEdit = async () => {
     setLoading(true)
-    push(`/recipe/create/${recipe.id}`)
+    push(`/recipe/edit/${recipe.id}`)
   }
 
-  const onDelete = async () => {
+  const handleDelete = async () => {
     setLoading(true)
-    await deleteRecipe(recipe)
+    await onDelete(recipe)
     setLoading(false)
+    onDeselect()
   }
 
   return (
@@ -75,7 +84,7 @@ const SelectedRecipe = ({ recipe, onDeselect }: { recipe: Recipe; onDeselect: ()
             <button title="Clone recipe" className="opacity-50 transition-opacity duration-300 hover:opacity-100">
               Clone <FaClone className="inline" />
             </button>
-            <button onClick={onDelete} title="Delete recipe" className="opacity-50 transition-opacity duration-300 hover:opacity-100">
+            <button onClick={handleDelete} title="Delete recipe" className="opacity-50 transition-opacity duration-300 hover:opacity-100">
               Delete <FaTrashAlt className="inline" />
             </button>
           </div>
@@ -94,31 +103,39 @@ const SelectedRecipe = ({ recipe, onDeselect }: { recipe: Recipe; onDeselect: ()
   )
 }
 
-export default function RecipeGallery({ recipes, totalPages }: { recipes: Recipe[]; totalPages: number }) {
+export default function RecipeGallery() {
+  const { recipes, totalPages } = useRecipes()
+  const { deleteRecipe } = useRecipeMutations()
+  const { query } = useFilterParams()
+
   const { push } = useRouter()
   const pathname = usePathname()
-  const searchParams = useSearchParams()
   const [recipe, setRecipe] = useState<Recipe | null>(null)
 
   const onSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
-    const params = new URLSearchParams(searchParams)
-    params.set('query', formData.get('query') as string)
-    push(`${pathname}?${params.toString()}`)
+    const query = formData.get('query')?.toString() ?? undefined
+    if (query) {
+      const params = new URLSearchParams()
+      params.set('query', query)
+      push(`${pathname}?${params.toString()}`)
+    } else {
+      push(pathname)
+    }
   }
 
   return (
     <>
       <form className="mb-10 flex w-full" onSubmit={onSearch}>
-        <input name="query" className="w-full text-neutral-950" placeholder="Search..." />
+        <input name="query" className="w-full text-neutral-950" placeholder="Search..." defaultValue={query ?? ''} />
         <button type="submit" className="ml-5">
           <FaMagnifyingGlass />
         </button>
       </form>
 
       <div className="grid h-full grid-cols-1 gap-5 overflow-y-auto px-5 pb-px scrollbar scrollbar-track-transparent scrollbar-thumb-slate-800 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 xl:grid-rows-2 xl:px-0">
-        {recipes.sort(sortByDate).map(recipe => (
+        {recipes.map(recipe => (
           <Polariod key={recipe.id} className="group relative cursor-pointer" onClick={() => setRecipe(recipe)}>
             <div className="relative w-full flex-grow">
               <Image
@@ -134,7 +151,7 @@ export default function RecipeGallery({ recipes, totalPages }: { recipes: Recipe
             <div className="flex min-h-16 items-center justify-center text-center text-2xl text-neutral-950">{recipe.name}</div>
           </Polariod>
         ))}
-        {recipe && <SelectedRecipe recipe={recipe} onDeselect={() => setRecipe(null)} />}
+        {recipe && <SelectedRecipe recipe={recipe} onDeselect={() => setRecipe(null)} onDelete={deleteRecipe} />}
       </div>
       <div className="sticky bottom-0 left-0 flex w-full items-center justify-center bg-neutral-950 py-10">
         <Pagination totalPages={totalPages} />

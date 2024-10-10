@@ -2,12 +2,10 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Ingredient } from '@prisma/client'
-import { useAtom } from 'jotai'
-import { FieldPath, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { FaCheck, FaPlus, FaTimes, FaTrashAlt } from 'react-icons/fa'
-import { ingredientsAtom } from '@/lib/atom'
-import { addIngredient, updateIngredient } from '@/lib/client'
 import { IngredientFormFields, IngredientSchema } from '@/lib/formSchema'
+import { useIngredientMutations } from '@/hooks/useIngredients'
 import { PaperInput, PaperRow } from '../ui/Paper'
 
 export default function IngredientForm({
@@ -22,10 +20,9 @@ export default function IngredientForm({
   const {
     handleSubmit,
     register,
-    setError,
     setFocus,
     reset,
-    formState: { dirtyFields },
+    formState: { dirtyFields, errors },
   } = useForm<IngredientFormFields>({
     resolver: zodResolver(IngredientSchema),
     defaultValues: {
@@ -35,33 +32,35 @@ export default function IngredientForm({
       optional: ingredient?.optional ?? false,
     },
   })
-  const [ingredients, setIngredients] = useAtom(ingredientsAtom)
+  const { addIngredient, updateIngredient } = useIngredientMutations(recipeId)
   const hasDirtyFields = Object.keys(dirtyFields).length > 0
 
   const onSubmit = async (data: IngredientFormFields) => {
-    const response = ingredient ? await updateIngredient(ingredient.id, data) : await addIngredient(recipeId, data)
+    try {
+      const editing = !!ingredient
+      editing ? await updateIngredient(ingredient.id, data) : await addIngredient(data)
 
-    if (response.errors) {
-      for (const { path, message } of response.errors) {
-        setError(path as FieldPath<IngredientFormFields>, { message })
-      }
-    }
-
-    if (response.ingredient) {
-      setIngredients([...(ingredient ? ingredients.filter(item => item.id !== ingredient.id) : ingredients), response.ingredient])
-      if (!ingredient) {
+      if (!editing) {
         reset()
         setFocus('quantity')
       }
+    } catch (error) {
+      console.error(error)
     }
+
+    // if (response.status === 'error' && response.errors) {
+    //   for (const { path, message } of response.errors) {
+    //     setError(path as FieldPath<IngredientFormFields>, { message })
+    //   }
+    // }
   }
 
   return (
     <PaperRow>
       <form onSubmit={handleSubmit(onSubmit)} className="group flex w-full gap-2">
-        <PaperInput type="number" step={0.1} min={0} className="w-20" placeholder="Qty..." {...register('quantity')} />
-        <PaperInput className="w-20" placeholder="Unit..." {...register('unit')} />
-        <PaperInput className="w-full capitalize" placeholder="Ingredient..." {...register('name')} />
+        <PaperInput type="number" step={0.1} min={0} className="w-20" placeholder="Qty..." {...register('quantity')} error={errors.quantity} />
+        <PaperInput className="w-20" placeholder="Unit..." {...register('unit')} error={errors.unit} />
+        <PaperInput className="w-full capitalize" placeholder="Ingredient..." {...register('name')} error={errors.name} />
 
         <div className="ml-2 flex items-center justify-center gap-2 text-lg opacity-0 transition-opacity delay-100 duration-300 group-hover:opacity-100">
           {ingredient ? (

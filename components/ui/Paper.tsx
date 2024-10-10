@@ -1,20 +1,27 @@
 'use client'
 
-import { Input, InputProps, Textarea, TextareaProps } from '@headlessui/react'
 import { motion, MotionProps } from 'framer-motion'
 import { Nothing_You_Could_Do } from 'next/font/google'
 import { ForwardedRef, forwardRef, useCallback, useEffect, useRef } from 'react'
-import { RefCallBack } from 'react-hook-form'
+import { FieldError, RefCallBack } from 'react-hook-form'
+import FieldErrorMessage from './FieldErrorMessage'
 import styles from './Paper.module.css'
 
 const nothingYouCouldDo = Nothing_You_Could_Do({ weight: '400', subsets: ['latin'] })
 
-const PaperInputComponent = (props: InputProps, inputRef: ForwardedRef<HTMLInputElement>) => (
-  <Input ref={inputRef} {...props} className={`${props.className ?? ''} border-none bg-transparent p-0 text-2xl leading-7 focus:ring-0`} />
+type InputProps = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
+type TextareaProps = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>
+
+const PaperInputComponent = (props: InputProps & { error?: FieldError }, inputRef: ForwardedRef<HTMLInputElement>) => (
+  <>
+    <input ref={inputRef} {...props} className={`border-none bg-transparent p-0 text-2xl leading-7 focus:ring-0 ${props.className ?? ''}`} />
+    <FieldErrorMessage error={props.error} />
+  </>
 )
+
 export const PaperInput = forwardRef(PaperInputComponent)
 
-const PaperTextareaComponent = (props: TextareaProps, inputRef: ForwardedRef<RefCallBack>) => {
+const PaperTextareaComponent = (props: TextareaProps & { error?: FieldError }, inputRef: ForwardedRef<RefCallBack>) => {
   const textareaRef = useRef<HTMLElement | null>(null)
 
   const fixHeight = useCallback(() => {
@@ -28,16 +35,19 @@ const PaperTextareaComponent = (props: TextareaProps, inputRef: ForwardedRef<Ref
   }, [fixHeight])
 
   return (
-    <Textarea
-      ref={e => {
-        inputRef && typeof inputRef === 'function' && inputRef(e as unknown as RefCallBack)
-        textareaRef.current = e
-      }}
-      rows={1}
-      {...props}
-      className={`${props.className ?? ''} overflow-hidden border-none bg-transparent p-0 text-2xl leading-7 focus:ring-0`}
-      onChange={fixHeight}
-    />
+    <>
+      <textarea
+        ref={e => {
+          inputRef && typeof inputRef === 'function' && inputRef(e as unknown as RefCallBack)
+          textareaRef.current = e
+        }}
+        rows={1}
+        {...props}
+        className={`${props.className ?? ''} overflow-hidden border-none bg-transparent p-0 text-2xl leading-7 focus:ring-0`}
+        onChange={fixHeight}
+      />
+      <FieldErrorMessage error={props.error} />
+    </>
   )
 }
 export const PaperTextarea = forwardRef(PaperTextareaComponent)

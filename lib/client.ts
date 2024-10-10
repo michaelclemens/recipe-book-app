@@ -1,6 +1,6 @@
 'use server'
 
-import { Ingredient, Method, Recipe } from '@prisma/client'
+import { Ingredient, Method, Recipe, Prisma } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import { notFound } from 'next/navigation'
 import { ZodError } from 'zod'
@@ -19,35 +19,39 @@ const parseZodErrors = (error: ZodError) => {
 export type RecipeFull = RecipeFormFields & { ingredients: IngredientFormFields[]; methods: MethodFormFields[] }
 
 export const createRecipe = async (data: RecipeFormFields) => {
-  let recipe, errors
   try {
     RecipeSchema.parse(data)
-    recipe = await prisma.recipe.create({ data })
-    revalidatePath('/')
+    return prisma.recipe.create({ data })
   } catch (error) {
     console.error(error)
     if (error instanceof ZodError) {
-      errors = parseZodErrors(error)
+      throw parseZodErrors(error)
     }
-  } finally {
-    return { recipe, errors }
+    throw error
   }
 }
 
-export const getRecipes = async (query: string, page: number, limit: number = 10) => {
+export const getRecipes = async ({ query, page, limit = 10 }: { query?: string; page?: number; limit?: number } = {}) => {
+  const where: Prisma.RecipeWhereInput = {}
+  if (query) {
+    where.name = { contains: query, mode: 'insensitive' }
+  }
   try {
-    return await prisma.$transaction([
-      prisma.recipe.count(),
+    const [count, recipes] = await prisma.$transaction([
+      prisma.recipe.count({ where }),
       prisma.recipe.findMany({
-        where: query ? { name: { contains: query, mode: 'insensitive' } } : undefined,
-        skip: page > 1 ? (page - 1) * limit : undefined,
+        where,
+        skip: page && page > 1 ? (page - 1) * limit : undefined,
         orderBy: { createdAt: 'asc' },
         take: limit,
       }),
     ])
+
+    const totalPages = Math.ceil(count / limit)
+    return { recipes, totalPages }
   } catch (error) {
     console.error(error)
-    return []
+    return { recipes: [], totalPages: 0 }
   }
 }
 
@@ -78,34 +82,14 @@ export const getIngredients = async (recipeId: string) => {
   }
 }
 
-export const addIngredient = async (recipeId: string, data: IngredientFormFields) => {
-  let ingredient, errors
-  try {
-    IngredientSchema.parse(data)
-    ingredient = await prisma.ingredient.create({ data: { recipeId, ...data, unit: data.unit ?? undefined } })
-  } catch (error) {
-    console.error(error)
-    if (error instanceof ZodError) {
-      errors = parseZodErrors(error)
-    }
-  } finally {
-    return { ingredient, errors }
-  }
+export const addIngredient = async ({ recipeId, data }: { recipeId: string; data: IngredientFormFields }) => {
+  IngredientSchema.parse(data)
+  return prisma.ingredient.create({ data: { recipeId, ...data, unit: data.unit ?? undefined } })
 }
 
-export const updateIngredient = async (id: string, data: IngredientFormFields) => {
-  let ingredient, errors
-  try {
-    IngredientSchema.parse(data)
-    ingredient = await prisma.ingredient.update({ where: { id }, data })
-  } catch (error) {
-    console.error(error)
-    if (error instanceof ZodError) {
-      errors = parseZodErrors(error)
-    }
-  } finally {
-    return { ingredient, errors }
-  }
+export const updateIngredient = async ({ id, data }: { id: string; data: IngredientFormFields }) => {
+  IngredientSchema.parse(data)
+  return prisma.ingredient.update({ where: { id }, data })
 }
 
 export const deleteIngredient = async (ingredient: Ingredient) => {
@@ -121,6 +105,7 @@ export const updateIngredientOrder = async (ingredients: Ingredient[]) => {
     for (const ingredient of ingredients) {
       await prisma.ingredient.update({ where: { id: ingredient.id }, data: { order: ingredient.order } })
     }
+    return ingredients
   } catch (error) {
     console.error(error)
   }
@@ -135,33 +120,29 @@ export const getMethods = async (recipeId: string) => {
   }
 }
 
-export const addMethod = async (recipeId: string, data: MethodFormFields) => {
-  let method, errors
+export const addMethod = async ({ recipeId, data }: { recipeId: string; data: MethodFormFields }) => {
   try {
     MethodSchema.parse(data)
-    method = await prisma.method.create({ data: { recipeId, ...data } })
+    return prisma.method.create({ data: { recipeId, ...data } })
   } catch (error) {
     console.error(error)
     if (error instanceof ZodError) {
-      errors = parseZodErrors(error)
+      throw parseZodErrors(error)
     }
-  } finally {
-    return { method, errors }
+    throw error
   }
 }
 
-export const updateMethod = async (id: string, data: MethodFormFields) => {
-  let method, errors
+export const updateMethod = async ({ id, data }: { id: string; data: MethodFormFields }) => {
   try {
     MethodSchema.parse(data)
-    method = await prisma.method.update({ where: { id }, data })
+    return prisma.method.update({ where: { id }, data })
   } catch (error) {
     console.error(error)
     if (error instanceof ZodError) {
-      errors = parseZodErrors(error)
+      throw parseZodErrors(error)
     }
-  } finally {
-    return { method, errors }
+    throw error
   }
 }
 
@@ -178,6 +159,7 @@ export const updateMethodOrder = async (methods: Method[]) => {
     for (const method of methods) {
       await prisma.method.update({ where: { id: method.id }, data: { order: method.order } })
     }
+    return methods
   } catch (error) {
     console.error(error)
   }

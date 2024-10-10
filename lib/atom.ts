@@ -1,5 +1,3 @@
-import { Ingredient, Method } from '@prisma/client'
-import { atom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 
 type CookTimer = {
@@ -8,6 +6,4 @@ type CookTimer = {
   endDate: Date
 }
 
-export const methodsAtom = atom<Method[]>([])
-export const ingredientsAtom = atom<Ingredient[]>([])
 export const cookTimersAtom = atomWithStorage<CookTimer[]>('cook-timers', [])

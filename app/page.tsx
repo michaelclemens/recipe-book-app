@@ -1,16 +1,15 @@
 // import Link from 'next/link'
-import { getRecipes } from '@/lib/client'
+import { HydrationBoundary } from '@tanstack/react-query'
+import { prefetchRecipes } from '@/hooks/useRecipes'
 import RecipeGallery from '@/components/recipe/RecipeGallery'
 
 // import { Button } from '@/components/ui'
 
-const recipeCount = 10
-
 export default async function Home({ searchParams }: { searchParams?: { query?: string; page?: string } }) {
-  const query = searchParams?.query || ''
-  const currentPage = Number(searchParams?.page) || 1
-  const [totalCount, recipes] = await getRecipes(query, currentPage, recipeCount)
-  const totalPages = Math.ceil(totalCount / recipeCount)
+  const query = searchParams?.query || undefined
+  const page = Number(searchParams?.page) || undefined
+
+  const recipes = await prefetchRecipes({ query, page })
   return (
     <main className="h-full w-full xl:px-10">
       {/* <Link href="/recipe/create" className="ml-2">
@@ -19,7 +18,9 @@ export default async function Home({ searchParams }: { searchParams?: { query?: 
         </Button>
       </Link> */}
       <div className="flex h-full flex-col">
-        <RecipeGallery recipes={recipes} totalPages={totalPages} />
+        <HydrationBoundary state={recipes}>
+          <RecipeGallery />
+        </HydrationBoundary>
       </div>
     </main>
   )

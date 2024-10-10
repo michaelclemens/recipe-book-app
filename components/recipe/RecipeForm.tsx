@@ -2,10 +2,10 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
-import { FieldPath, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { FaPlus, FaTimes } from 'react-icons/fa'
-import { createRecipe } from '@/lib/client'
 import { RecipeFormFields, RecipeSchema } from '@/lib/formSchema'
+import { useRecipeMutations } from '@/hooks/useRecipes'
 import { Button, Input, SubmitButton } from '../ui'
 
 export default function RecipeForm() {
@@ -14,23 +14,26 @@ export default function RecipeForm() {
     handleSubmit,
     reset,
     register,
-    setError,
     formState: { errors, dirtyFields },
   } = useForm<RecipeFormFields>({ resolver: zodResolver(RecipeSchema) })
   const hasDirtyFields = Object.keys(dirtyFields).length > 0
+  const { addRecipe } = useRecipeMutations()
 
   const onSubmit = async (data: RecipeFormFields) => {
-    const response = await createRecipe(data)
-
-    if (response.errors) {
-      for (const { path, message } of response.errors) {
-        setError(path as FieldPath<RecipeFormFields>, { message })
-      }
+    const recipe = await addRecipe(data)
+    if (recipe) {
+      push(`/recipe/edit/${recipe.id}`)
     }
 
-    if (response.recipe) {
-      push(`/recipe/create/${response.recipe.id}`)
-    }
+    // if (response.errors) {
+    //   for (const { path, message } of response.errors) {
+    //     setError(path as FieldPath<RecipeFormFields>, { message })
+    //   }
+    // }
+
+    // if (response.recipe) {
+    //   push(`/recipe/edit/${response.recipe.id}`)
+    // }
   }
 
   return (

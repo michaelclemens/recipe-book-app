@@ -8,7 +8,6 @@ export type RecipeFormFields = z.infer<typeof RecipeSchema>
 
 export const IngredientSchema = z.object({
   name: z.string().min(1, { message: 'Ingredient name is required' }),
-  optional: z.boolean().optional(),
   quantity: z.coerce
     .number()
     .multipleOf(0.1)
@@ -19,6 +18,7 @@ export const IngredientSchema = z.object({
     .nativeEnum(unitLabelMap, { message: 'Invalid unit' })
     .optional()
     .or(z.literal('').transform(() => undefined)),
+  optional: z.boolean().optional(),
 })
 export type IngredientFormFields = z.infer<typeof IngredientSchema>
 
