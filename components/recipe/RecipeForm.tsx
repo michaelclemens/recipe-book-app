@@ -22,7 +22,7 @@ export default function RecipeForm() {
   const onSubmit = async (data: RecipeFormFields) => {
     const recipe = await addRecipe(data)
     if (recipe) {
-      push(`/recipe/edit/${recipe.id}`)
+      push(`/recipe/${recipe.id}/edit`)
     }
 
     // if (response.errors) {
@@ -32,7 +32,7 @@ export default function RecipeForm() {
     // }
 
     // if (response.recipe) {
-    //   push(`/recipe/edit/${response.recipe.id}`)
+    //   push(`/recipe/${response.recipe.id}/edit`)
     // }
   }
 

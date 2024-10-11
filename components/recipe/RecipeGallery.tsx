@@ -28,12 +28,12 @@ const SelectedRecipe = ({
 
   const onCook = async () => {
     setLoading(true)
-    push(`/recipe/cook/${recipe.id}`, { scroll: false })
+    push(`/recipe/${recipe.id}/cook`, { scroll: false })
   }
 
   const onEdit = async () => {
     setLoading(true)
-    push(`/recipe/edit/${recipe.id}`)
+    push(`/recipe/${recipe.id}/edit`)
   }
 
   const handleDelete = async () => {
