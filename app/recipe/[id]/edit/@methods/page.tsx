@@ -1,5 +1,5 @@
 import { HydrationBoundary } from '@tanstack/react-query'
-import { prefetchMethods } from '@/hooks/useMethods'
+import { prefetchMethods } from '@/hooks/recipe/useMethods'
 import MethodForm from '@/components/method/MethodForm'
 import MethodList from '@/components/method/MethodList'
 import Paper, { PaperRow } from '@/components/ui/Paper'

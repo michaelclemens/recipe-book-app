@@ -51,3 +51,23 @@ model Method {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model List {
+  id        String   @id @default(cuid())
+  name      String
+  items     Item[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Item {
+  id        String   @id @default(cuid())
+  list      List     @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId    String
+  name      String
+  quantity  Float?
+  unit      String?
+  order     Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

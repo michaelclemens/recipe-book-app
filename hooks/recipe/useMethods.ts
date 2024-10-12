@@ -7,7 +7,7 @@ import {
   deleteMethod as clientDeleteMethod,
   getMethods,
   updateMethodOrder,
-} from '@/lib/client'
+} from '@/lib/client/recipe'
 import { MethodFormFields } from '@/lib/formSchema'
 import getQueryClient from '@/lib/queryClient'
 import { sortByOrder } from '@/util/sort'

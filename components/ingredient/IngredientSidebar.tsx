@@ -1,6 +1,6 @@
 'use client'
 
-import useIngredients from '@/hooks/useIngredients'
+import useIngredients from '@/hooks/recipe/useIngredients'
 import Paper, { PaperRow } from '../ui/Paper'
 
 export default function IngredientSidebar({ recipeId }: { recipeId: string }) {

@@ -1,5 +1,5 @@
 import { HydrationBoundary } from '@tanstack/react-query'
-import { prefetchIngredients } from '@/hooks/useIngredients'
+import { prefetchIngredients } from '@/hooks/recipe/useIngredients'
 import IngredientForm from '@/components/ingredient/IngredientForm'
 import IngredientList from '@/components/ingredient/IngredientList'
 import Paper, { PaperRow } from '@/components/ui/Paper'

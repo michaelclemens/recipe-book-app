@@ -1,5 +1,5 @@
 import { HydrationBoundary } from '@tanstack/react-query'
-import { prefetchRecipe } from '@/hooks/useRecipe'
+import { prefetchRecipe } from '@/hooks/recipe/useRecipe'
 import CookTimers from '@/components/cook/CookTimers'
 
 export default async function CookRecipeLayout({

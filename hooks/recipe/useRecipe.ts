@@ -1,5 +1,5 @@
 import { dehydrate, useQuery } from '@tanstack/react-query'
-import { getRecipe } from '@/lib/client'
+import { getRecipe } from '@/lib/client/recipe'
 import getQueryClient from '@/lib/queryClient'
 
 const getQueryKey = (recipeId: string) => ['recipe', recipeId]
@@ -16,5 +16,5 @@ export default function useRecipe(recipeId: string) {
     queryFn: async () => getRecipe(recipeId),
   })
 
-  return { recipe }
+  return recipe
 }

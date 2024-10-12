@@ -1,6 +1,6 @@
 'use client'
 
-import useMethods, { useMethodMutations } from '@/hooks/useMethods'
+import useMethods, { useMethodMutations } from '@/hooks/recipe/useMethods'
 import { SortableVerticalList } from '../ui'
 import MethodForm from './MethodForm'
 

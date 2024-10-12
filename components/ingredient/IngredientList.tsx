@@ -1,6 +1,6 @@
 'use client'
 
-import useIngredients, { useIngredientMutations } from '@/hooks/useIngredients'
+import useIngredients, { useIngredientMutations } from '@/hooks/recipe/useIngredients'
 import { SortableVerticalList } from '../ui'
 import IngredientForm from './IngredientForm'
 

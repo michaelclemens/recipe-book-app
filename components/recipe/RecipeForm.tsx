@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { FaPlus, FaTimes } from 'react-icons/fa'
 import { RecipeFormFields, RecipeSchema } from '@/lib/formSchema'
-import { useRecipeMutations } from '@/hooks/useRecipes'
+import { useRecipeMutations } from '@/hooks/recipe/useRecipes'
 import { Button, Input, SubmitButton } from '../ui'
 
 export default function RecipeForm() {

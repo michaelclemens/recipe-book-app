@@ -7,7 +7,7 @@ import {
   getIngredients,
   updateIngredient as clientUpdateIngredient,
   updateIngredientOrder,
-} from '@/lib/client'
+} from '@/lib/client/recipe'
 import { IngredientFormFields } from '@/lib/formSchema'
 import getQueryClient from '@/lib/queryClient'
 import { sortByOrder } from '@/util/sort'

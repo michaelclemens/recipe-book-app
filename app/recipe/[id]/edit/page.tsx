@@ -1,11 +1,11 @@
 'use client'
 
 import Image from 'next/image'
-import useRecipe from '@/hooks/useRecipe'
+import useRecipe from '@/hooks/recipe/useRecipe'
 import Polariod from '@/components/ui/Polariod'
 
 export default function RecipePage({ params: { id } }: { params: { id: string } }) {
-  const { recipe } = useRecipe(id)
+  const recipe = useRecipe(id)
   if (!recipe) return
   return (
     <div className="flex items-center px-10">

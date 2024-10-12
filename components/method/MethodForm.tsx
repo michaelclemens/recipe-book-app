@@ -5,7 +5,7 @@ import { Method } from '@prisma/client'
 import { useForm } from 'react-hook-form'
 import { FaCheck, FaPlus, FaTimes, FaTrashAlt } from 'react-icons/fa'
 import { MethodFormFields, MethodSchema } from '@/lib/formSchema'
-import { useMethodMutations } from '@/hooks/useMethods'
+import { useMethodMutations } from '@/hooks/recipe/useMethods'
 import { PaperInput, PaperRow, PaperTextarea } from '../ui/Paper'
 
 export default function MethodForm({

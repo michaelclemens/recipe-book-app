@@ -5,7 +5,7 @@ import { Ingredient } from '@prisma/client'
 import { useForm } from 'react-hook-form'
 import { FaCheck, FaPlus, FaTimes, FaTrashAlt } from 'react-icons/fa'
 import { IngredientFormFields, IngredientSchema } from '@/lib/formSchema'
-import { useIngredientMutations } from '@/hooks/useIngredients'
+import { useIngredientMutations } from '@/hooks/recipe/useIngredients'
 import { PaperInput, PaperRow } from '../ui/Paper'
 
 export default function IngredientForm({

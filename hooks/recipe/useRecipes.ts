@@ -1,11 +1,11 @@
 import { Recipe } from '@prisma/client'
 import { dehydrate, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
-import { createRecipe, getRecipes, deleteRecipe as clientDeleteRecipe } from '@/lib/client'
+import { createRecipe, getRecipes, deleteRecipe as clientDeleteRecipe } from '@/lib/client/recipe'
 import { RecipeFormFields } from '@/lib/formSchema'
 import getQueryClient from '@/lib/queryClient'
 import { sortByDate } from '@/util/sort'
-import useFilterParams from './useFilterParams'
+import useFilterParams from '../useFilterParams'
 
 type filterParams = {
   page?: number

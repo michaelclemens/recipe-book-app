@@ -1,6 +1,6 @@
 // import Link from 'next/link'
 import { HydrationBoundary } from '@tanstack/react-query'
-import { prefetchRecipes } from '@/hooks/useRecipes'
+import { prefetchRecipes } from '@/hooks/recipe/useRecipes'
 import RecipeGallery from '@/components/recipe/RecipeGallery'
 
 // import { Button } from '@/components/ui'

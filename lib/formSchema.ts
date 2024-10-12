@@ -32,3 +32,18 @@ export const MethodSchema = z.object({
     .or(z.literal('').transform(() => undefined)),
 })
 export type MethodFormFields = z.infer<typeof MethodSchema>
+
+export const ItemSchema = z.object({
+  name: z.string().min(1, { message: 'Item name is required' }),
+  quantity: z.coerce
+    .number()
+    .multipleOf(0.1)
+    .positive()
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+  unit: z
+    .nativeEnum(unitLabelMap, { message: 'Invalid unit' })
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+})
+export type ItemFormFields = z.infer<typeof ItemSchema>

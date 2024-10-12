@@ -7,7 +7,7 @@ import { useAtom } from 'jotai'
 import { useResetAtom } from 'jotai/utils'
 import { useEffect, useState } from 'react'
 import { cookTimersAtom } from '@/lib/atom'
-import useMethods from '@/hooks/useMethods'
+import useMethods from '@/hooks/recipe/useMethods'
 import Paper, { PaperRow } from '../ui/Paper'
 
 const dragBuffer = 150

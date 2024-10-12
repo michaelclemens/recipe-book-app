@@ -4,8 +4,8 @@ import { Ingredient, Method, Recipe, Prisma } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import { notFound } from 'next/navigation'
 import { ZodError } from 'zod'
-import { IngredientFormFields, IngredientSchema, MethodFormFields, MethodSchema, RecipeFormFields, RecipeSchema } from './formSchema'
-import prisma from './prisma'
+import { IngredientFormFields, IngredientSchema, MethodFormFields, MethodSchema, RecipeFormFields, RecipeSchema } from '../formSchema'
+import prisma from '../prisma'
 
 const parseZodErrors = (error: ZodError) => {
   const errors = []
@@ -15,8 +15,6 @@ const parseZodErrors = (error: ZodError) => {
   }
   return errors
 }
-
-export type RecipeFull = RecipeFormFields & { ingredients: IngredientFormFields[]; methods: MethodFormFields[] }
 
 export const createRecipe = async (data: RecipeFormFields) => {
   try {
