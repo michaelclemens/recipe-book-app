@@ -9,10 +9,8 @@ export default function IngredientList({ recipeId }: { recipeId: string }) {
   const { sortIngredients, deleteIngredient } = useIngredientMutations(recipeId)
 
   return (
-    <div className="z-10 -ml-8 h-full snap-y overflow-y-auto scrollbar scrollbar-track-transparent scrollbar-thumb-neutral-500/50">
-      <SortableVerticalList items={ingredients} onSort={sortIngredients}>
-        {ingredient => <IngredientForm recipeId={ingredient.recipeId} ingredient={ingredient} onDelete={deleteIngredient} />}
-      </SortableVerticalList>
-    </div>
+    <SortableVerticalList items={ingredients} onSort={sortIngredients}>
+      {ingredient => <IngredientForm recipeId={ingredient.recipeId} ingredient={ingredient} onDelete={deleteIngredient} />}
+    </SortableVerticalList>
   )
 }

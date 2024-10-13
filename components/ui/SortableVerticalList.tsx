@@ -1,82 +1,72 @@
 'use client'
 
-import { closestCenter, DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
-import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers'
-import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
-import { useSortable } from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
-import { useId } from 'react'
+import { Reorder, useDragControls, useMotionValue } from 'framer-motion'
+import { useState } from 'react'
 import { RiDraggable } from 'react-icons/ri'
 
-function SortableItem({ id, children, className = '' }: { id: string; children: React.ReactNode; className?: string }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id })
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ItemType = any
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
-  }
+const Item = ({ item, children, onDragEnd }: { item: ItemType; children: React.ReactNode; onDragEnd: (item: ItemType) => Promise<void> }) => {
+  const y = useMotionValue(0)
+  const dragControls = useDragControls()
 
   return (
-    <div ref={setNodeRef} style={style} className={`${className} group flex w-full snap-start`}>
+    <Reorder.Item
+      className={`group flex w-full snap-start`}
+      value={item}
+      id={item.id}
+      style={{ y }}
+      dragListener={false}
+      dragControls={dragControls}
+      onDragEnd={() => onDragEnd(item)}
+    >
       <div
-        {...listeners}
-        {...attributes}
-        className="mr-2 text-neutral-950 opacity-0 transition-opacity duration-500 hover:opacity-80 active:cursor-grabbing group-hover:[&:not(:hover)]:opacity-30"
+        className="mr-2 text-neutral-950 opacity-0 transition-opacity duration-500 hover:opacity-80 active:cursor-grabbing active:select-none group-hover:[&:not(:hover)]:opacity-30"
+        onPointerDown={event => dragControls.start(event)}
       >
         <RiDraggable title="Move item" />
       </div>
       {children}
-    </div>
+    </Reorder.Item>
   )
 }
 
 export default function SortableVerticalList({
-  items,
+  items: initialItems,
   children,
   onSort,
-  itemClassName = '',
+  className = '',
 }: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  items: any[]
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  children: (item: any) => React.ReactNode
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onSort: (sortedItems: any[]) => Promise<void>
-  itemClassName?: string
+  items: ItemType[]
+  children: (item: ItemType) => React.ReactNode
+  onSort: (sortedItems: ItemType[]) => Promise<void>
+  className?: string
 }) {
-  const id = useId()
-  const sensors = useSensors(useSensor(PointerSensor))
+  const [items, setItems] = useState(initialItems)
 
-  const onDragEnd = async (event: DragEndEvent) => {
-    const { active, over } = event
+  const onDragEnd = async (item: ItemType) => {
+    const oldIndex = initialItems.findIndex(({ id }) => id === item.id)
+    const newIndex = items.findIndex(({ id }) => id === item.id)
 
-    if (!over) return
-
-    if (active.id !== over.id) {
-      const oldIndex = items.findIndex(item => item.id === active.id)
-      const newIndex = items.findIndex(item => item.id === over.id)
-
-      const newItems = arrayMove(items, oldIndex, newIndex).map((item, index) => ({ ...item, order: index + 1 }))
-      await onSort(newItems)
+    if (oldIndex !== newIndex) {
+      await onSort(items.map((item, index) => ({ ...item, order: index + 1 })))
     }
   }
 
   return (
-    <DndContext
-      id={`dnd-${id}`}
-      sensors={sensors}
-      modifiers={[restrictToVerticalAxis, restrictToParentElement]}
-      collisionDetection={closestCenter}
-      onDragEnd={onDragEnd}
+    <Reorder.Group
+      axis="y"
+      onReorder={setItems}
+      values={items}
+      layoutScroll
+      className={`z-10 -ml-8 h-full snap-y overflow-y-auto scrollbar scrollbar-track-transparent scrollbar-thumb-neutral-500/50 ${className}`}
     >
-      <SortableContext items={items} strategy={verticalListSortingStrategy}>
-        {items.map(item => (
-          <SortableItem key={item.id} id={item.id} className={itemClassName}>
-            {children(item)}
-          </SortableItem>
-        ))}
-      </SortableContext>
-    </DndContext>
+      {items.map(item => (
+        <Item key={item.id} item={item} onDragEnd={onDragEnd}>
+          {children(item)}
+        </Item>
+      ))}
+    </Reorder.Group>
   )
 }
