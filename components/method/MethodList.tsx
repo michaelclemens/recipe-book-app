@@ -9,8 +9,8 @@ export default function MethodList({ recipeId }: { recipeId: string }) {
   const { deleteMethod, sortMethods } = useMethodMutations(recipeId)
 
   return (
-    <SortableVerticalList items={methods} onSort={sortMethods} className="list-decimal space-y-7">
-      {method => <MethodForm recipeId={method.recipeId} method={method} onDelete={deleteMethod} />}
+    <SortableVerticalList items={methods} onSort={sortMethods} className="space-y-7">
+      {(method, index) => <MethodForm recipeId={method.recipeId} stepNo={++index} method={method} onDelete={deleteMethod} />}
     </SortableVerticalList>
   )
 }

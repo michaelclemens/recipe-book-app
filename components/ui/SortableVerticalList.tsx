@@ -22,7 +22,7 @@ const Item = ({ item, children, onDragEnd }: { item: ItemType; children: React.R
       onDragEnd={() => onDragEnd(item)}
     >
       <div
-        className="mr-2 text-neutral-950 opacity-0 transition-opacity duration-500 hover:opacity-80 active:cursor-grabbing active:select-none group-hover:[&:not(:hover)]:opacity-30"
+        className="mr-2 cursor-grab text-neutral-950 opacity-0 transition-opacity duration-500 hover:opacity-80 active:cursor-grabbing active:select-none group-hover:[&:not(:hover)]:opacity-30"
         onPointerDown={event => dragControls.start(event)}
       >
         <RiDraggable title="Move item" />
@@ -39,7 +39,7 @@ export default function SortableVerticalList({
   className = '',
 }: {
   items: ItemType[]
-  children: (item: ItemType) => React.ReactNode
+  children: (item: ItemType, index: number) => React.ReactNode
   onSort: (sortedItems: ItemType[]) => Promise<void>
   className?: string
 }) {
@@ -62,9 +62,9 @@ export default function SortableVerticalList({
       layoutScroll
       className={`z-10 -ml-8 h-full snap-y overflow-y-auto scrollbar scrollbar-track-transparent scrollbar-thumb-neutral-500/50 ${className}`}
     >
-      {items.map(item => (
+      {items.map((item, index) => (
         <Item key={item.id} item={item} onDragEnd={onDragEnd}>
-          {children(item)}
+          {children(item, index)}
         </Item>
       ))}
     </Reorder.Group>

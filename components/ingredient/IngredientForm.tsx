@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form'
 import { FaCheck, FaPlus, FaTimes, FaTrashAlt } from 'react-icons/fa'
 import { IngredientFormFields, IngredientSchema } from '@/lib/formSchema'
 import { useIngredientMutations } from '@/hooks/recipe/useIngredients'
-import { PaperInput, PaperRow } from '../ui/Paper'
+import { PaperInput } from '../ui/Paper'
 
 export default function IngredientForm({
   recipeId,
@@ -56,36 +56,34 @@ export default function IngredientForm({
   }
 
   return (
-    <PaperRow>
-      <form onSubmit={handleSubmit(onSubmit)} className="group flex w-full gap-2">
-        <PaperInput type="number" step={0.1} min={0} className="w-20" placeholder="Qty..." {...register('quantity')} error={errors.quantity} />
-        <PaperInput className="w-20" placeholder="Unit..." {...register('unit')} error={errors.unit} />
-        <PaperInput className="w-full capitalize" placeholder="Ingredient..." {...register('name')} error={errors.name} />
+    <form onSubmit={handleSubmit(onSubmit)} className="group flex w-full gap-2">
+      <PaperInput type="number" step={0.1} min={0} className="w-20" placeholder="Qty..." {...register('quantity')} error={errors.quantity} />
+      <PaperInput className="w-20" placeholder="Unit..." {...register('unit')} error={errors.unit} />
+      <PaperInput className="w-full capitalize" placeholder="Ingredient..." {...register('name')} error={errors.name} />
 
-        <div className="ml-2 flex items-center justify-center gap-2 text-lg opacity-0 transition-opacity delay-100 duration-300 group-hover:opacity-100">
-          {ingredient ? (
-            <>
-              {onDelete && (
-                <button type="button" title="Delete ingredient" className="text-red-800" onClick={async () => onDelete(ingredient)}>
-                  <FaTrashAlt />
-                </button>
-              )}
-              <button type="submit" title="Update ingredient" className="text-green-800 disabled:opacity-50" disabled={!hasDirtyFields}>
-                <FaCheck />
+      <div className="ml-2 flex items-center justify-center gap-2 text-lg opacity-0 transition-opacity delay-100 duration-300 group-hover:opacity-100">
+        {ingredient ? (
+          <>
+            {onDelete && (
+              <button type="button" title="Delete ingredient" className="text-red-800" onClick={async () => onDelete(ingredient)}>
+                <FaTrashAlt />
               </button>
-            </>
-          ) : (
-            <>
-              <button type="button" title="Clear" className="text-red-800 disabled:opacity-50" onClick={() => reset()} disabled={!hasDirtyFields}>
-                <FaTimes />
-              </button>
-              <button type="submit" title="Add ingredient" className="text-green-800 disabled:opacity-50" disabled={!hasDirtyFields}>
-                <FaPlus />
-              </button>
-            </>
-          )}
-        </div>
-      </form>
-    </PaperRow>
+            )}
+            <button type="submit" title="Update ingredient" className="text-green-800 disabled:opacity-50" disabled={!hasDirtyFields}>
+              <FaCheck />
+            </button>
+          </>
+        ) : (
+          <>
+            <button type="button" title="Clear" className="text-red-800 disabled:opacity-50" onClick={() => reset()} disabled={!hasDirtyFields}>
+              <FaTimes />
+            </button>
+            <button type="submit" title="Add ingredient" className="text-green-800 disabled:opacity-50" disabled={!hasDirtyFields}>
+              <FaPlus />
+            </button>
+          </>
+        )}
+      </div>
+    </form>
   )
 }

@@ -52,10 +52,6 @@ const PaperTextareaComponent = (props: TextareaProps & { error?: FieldError }, i
 }
 export const PaperTextarea = forwardRef(PaperTextareaComponent)
 
-export const PaperRow = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
-  <div className={`${className} w-full`}>{children}</div>
-)
-
 export default function Paper({
   children,
   className = '',

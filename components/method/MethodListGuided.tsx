@@ -8,7 +8,7 @@ import { useResetAtom } from 'jotai/utils'
 import { useEffect, useState } from 'react'
 import { cookTimersAtom } from '@/lib/atom'
 import useMethods from '@/hooks/recipe/useMethods'
-import Paper, { PaperRow } from '../ui/Paper'
+import Paper from '../ui/Paper'
 
 const dragBuffer = 150
 
@@ -104,12 +104,12 @@ export default function MethodListGuided({ recipeId }: { recipeId: string }) {
             }}
             className="h-full w-full flex-shrink-0 cursor-grab active:cursor-grabbing"
           >
-            <PaperRow className="my-10 flex h-full flex-col justify-start overflow-y-auto py-1 text-4xl md:justify-center">
+            <div className="my-10 flex h-full flex-col justify-start overflow-y-auto py-1 text-4xl md:justify-center">
               <motion.div initial={{ opacity: 0.2 }} whileInView={{ opacity: 1 }} viewport={{ amount: 'all' }}>
                 {getStepNo(index)}. {method.step}
               </motion.div>
-            </PaperRow>
-            <PaperRow className="flex w-full flex-row items-center text-5xl">
+            </div>
+            <div className="flex w-full flex-row items-center text-5xl">
               {method.stepTime && (
                 <button
                   onClick={() => addTimer(getStepNo(index), method)}
@@ -123,7 +123,7 @@ export default function MethodListGuided({ recipeId }: { recipeId: string }) {
               <button onClick={onDone} title="Next step" className="flex w-full justify-end">
                 Done
               </button>
-            </PaperRow>
+            </div>
           </Paper>
         ))}
       </div>
