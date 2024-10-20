@@ -1,7 +1,6 @@
 # Recipe Book App (WIP) ![GitHub CI](https://github.com/michaelclemens/recipe-book-app/actions/workflows/ci.yml/badge.svg)
 
-> [!WARNING]
-> This is very much a Work In Progress
+> [!WARNING] This is very much a Work In Progress
 
 ## Overview
 

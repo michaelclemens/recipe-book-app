@@ -1,9 +1,9 @@
 import { HydrationBoundary } from '@tanstack/react-query'
+import { Suspense } from 'react'
 import { prefetchMethods } from '@/hooks/recipe/useMethods'
 import MethodForm from '@/components/method/MethodForm'
 import MethodList from '@/components/method/MethodList'
 import Paper from '@/components/ui/Paper'
-import { Suspense } from 'react'
 
 export default async function MethodsPage({ params: { id } }: { params: { id: string } }) {
   const methods = await prefetchMethods(id)
