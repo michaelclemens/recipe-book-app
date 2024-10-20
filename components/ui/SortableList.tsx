@@ -1,13 +1,13 @@
 'use client'
 
 import { Reorder, useDragControls, useMotionValue } from 'framer-motion'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { RiDraggable } from 'react-icons/ri'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ItemType = any
 
-const Item = ({ item, children, onDragEnd }: { item: ItemType; children: React.ReactNode; onDragEnd: (item: ItemType) => Promise<void> }) => {
+const SortableItem = ({ item, children, onDragEnd }: { item: ItemType; children: React.ReactNode; onDragEnd: (item: ItemType) => Promise<void> }) => {
   const y = useMotionValue(0)
   const dragControls = useDragControls()
 
@@ -32,7 +32,7 @@ const Item = ({ item, children, onDragEnd }: { item: ItemType; children: React.R
   )
 }
 
-export default function SortableVerticalList({
+export default function SortableList({
   items: initialItems,
   children,
   onSort,
@@ -40,15 +40,21 @@ export default function SortableVerticalList({
 }: {
   items: ItemType[]
   children: (item: ItemType, index: number) => React.ReactNode
-  onSort: (sortedItems: ItemType[]) => Promise<void>
+  onSort: (sortedItems: ItemType[]) => Promise<ItemType[] | undefined>
   className?: string
 }) {
   const [items, setItems] = useState(initialItems)
 
+  useEffect(() => {
+    if (initialItems.length !== items.length) {
+      console.log('vvv')
+      setItems(initialItems)
+    }
+  }, [initialItems, items])
+
   const onDragEnd = async (item: ItemType) => {
     const oldIndex = initialItems.findIndex(({ id }) => id === item.id)
     const newIndex = items.findIndex(({ id }) => id === item.id)
-
     if (oldIndex !== newIndex) {
       await onSort(items.map((item, index) => ({ ...item, order: index + 1 })))
     }
@@ -63,9 +69,9 @@ export default function SortableVerticalList({
       className={`z-10 -ml-8 h-full snap-y overflow-y-auto scrollbar scrollbar-track-transparent scrollbar-thumb-neutral-500/50 ${className}`}
     >
       {items.map((item, index) => (
-        <Item key={item.id} item={item} onDragEnd={onDragEnd}>
+        <SortableItem key={item.id} item={item} onDragEnd={onDragEnd}>
           {children(item, index)}
-        </Item>
+        </SortableItem>
       ))}
     </Reorder.Group>
   )

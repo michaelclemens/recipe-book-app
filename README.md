@@ -14,7 +14,7 @@
 - ❔[TanStack React Query](https://tanstack.com/query/latest/docs)
 - 🖼️ [Framer Motion](https://www.framer.com/motion/)
 - 🌈 [Prisma ORM](https://www.prisma.io/docs/orm)
-- 🐘 [PostgreSQL 16](https://www.postgresql.org/docs/16/index.html) (docker-compose container)
+- 🐘 [PostgreSQL 17](https://www.postgresql.org/docs/17/index.html) (docker-compose container)
 - 🃏 [Jest](https://jestjs.io/docs) + [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
 - 📏 [ESLint](https://eslint.org/docs)
 - 💖 [Prettier](https://prettier.io/docs/en/)

@@ -1,5 +1,6 @@
 // import Link from 'next/link'
 import { HydrationBoundary } from '@tanstack/react-query'
+import { Suspense } from 'react'
 import { prefetchRecipes } from '@/hooks/recipe/useRecipes'
 import RecipeGallery from '@/components/recipe/RecipeGallery'
 
@@ -19,7 +20,9 @@ export default async function RecipeHome({ searchParams }: { searchParams?: { qu
       </Link> */}
       <div className="flex h-full flex-col">
         <HydrationBoundary state={recipes}>
-          <RecipeGallery />
+          <Suspense fallback="Loading...">
+            <RecipeGallery />
+          </Suspense>
         </HydrationBoundary>
       </div>
     </main>

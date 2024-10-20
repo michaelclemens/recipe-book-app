@@ -1,4 +1,5 @@
 import { HydrationBoundary } from '@tanstack/react-query'
+import { Suspense } from 'react'
 import { prefetchRecipe } from '@/hooks/recipe/useRecipe'
 
 export default async function RecipeLayout({
@@ -16,10 +17,10 @@ export default async function RecipeLayout({
   return (
     <HydrationBoundary state={recipe}>
       <main className="-mt-5 flex h-full w-full flex-grow flex-col overflow-hidden pt-5">
-        {children}
+        <Suspense fallback="Loading...">{children}</Suspense>
         <div className="grid h-full grid-cols-2 overflow-hidden p-5">
-          {ingredients}
-          {methods}
+          <Suspense fallback="Loading...">{ingredients}</Suspense>
+          <Suspense fallback="Loading...">{methods}</Suspense>
         </div>
       </main>
     </HydrationBoundary>

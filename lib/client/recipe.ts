@@ -65,7 +65,7 @@ export const getRecipe = async (id: string) => {
 export const deleteRecipe = async (recipe: Recipe) => {
   try {
     await prisma.recipe.delete({ where: { id: recipe.id } })
-    revalidatePath('/')
+    revalidatePath('/recipe')
   } catch (error) {
     console.error(error)
   }

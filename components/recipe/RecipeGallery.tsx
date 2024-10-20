@@ -106,7 +106,9 @@ const SelectedRecipe = ({
 export default function RecipeGallery() {
   const { recipes, totalPages } = useRecipes()
   const { deleteRecipe } = useRecipeMutations()
-  const { query } = useFilterParams()
+  const {
+    filter: { query },
+  } = useFilterParams()
 
   const { push } = useRouter()
   const pathname = usePathname()
@@ -115,10 +117,10 @@ export default function RecipeGallery() {
   const onSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
-    const query = formData.get('query')?.toString() ?? undefined
-    if (query) {
+    const search = formData.get('search')?.toString() ?? undefined
+    if (search) {
       const params = new URLSearchParams()
-      params.set('query', query)
+      params.set('query', search)
       push(`${pathname}?${params.toString()}`)
     } else {
       push(pathname)
@@ -128,7 +130,7 @@ export default function RecipeGallery() {
   return (
     <>
       <form className="mb-10 flex w-full" onSubmit={onSearch}>
-        <input name="query" className="w-full text-neutral-950" placeholder="Search..." defaultValue={query ?? ''} />
+        <input name="search" className="w-full text-neutral-950" placeholder="Search..." defaultValue={query ?? ''} />
         <button type="submit" className="ml-5">
           <FaMagnifyingGlass />
         </button>

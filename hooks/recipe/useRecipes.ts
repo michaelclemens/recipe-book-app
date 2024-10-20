@@ -21,7 +21,7 @@ export const prefetchRecipes = async (filter?: filterParams) => {
 }
 
 export const useRecipeMutations = () => {
-  const filter = useFilterParams()
+  const { filter } = useFilterParams()
   const queryKey = getQueryKey(filter)
   const queryClient = useQueryClient()
 
@@ -47,7 +47,7 @@ export const useRecipeMutations = () => {
 }
 
 export default function useRecipes() {
-  const filter = useFilterParams()
+  const { filter } = useFilterParams()
   const queryKey = getQueryKey(filter)
 
   const { data } = useQuery({

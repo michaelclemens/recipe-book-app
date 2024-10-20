@@ -6,7 +6,7 @@ import { ItemFormFields } from '@/lib/formSchema'
 import getQueryClient from '@/lib/queryClient'
 import { sortByOrder } from '@/util/sort'
 
-const getQueryKey = (listId: string) => ['shoppingListItems', listId]
+const getQueryKey = (listId: string) => ['listItems', listId]
 
 export const prefetchItems = async (listId: string) => {
   const queryClient = getQueryClient()
@@ -22,7 +22,7 @@ export const useItemMutations = (listId: string) => {
     mutationFn: addItem,
     onSuccess: item => {
       queryClient.setQueryData(queryKey, (current: Item[]) => [...current, item])
-      queryClient.invalidateQueries({ queryKey, refetchType: 'inactive' })
+      queryClient.invalidateQueries({ queryKey })
     },
   })
 
@@ -62,9 +62,7 @@ export const useItemMutations = (listId: string) => {
   const add = async (data: ItemFormFields) => addMutation.mutateAsync({ listId, data })
   const update = async (id: string, data: ItemFormFields) => updateMutation.mutateAsync({ id, data })
   const remove = async (item: Item) => deleteMutation.mutateAsync(item)
-  const sort = async (item: Item[]) => {
-    sortMutation.mutateAsync(item)
-  }
+  const sort = async (items: Item[]) => sortMutation.mutateAsync(items)
 
   return { add, update, remove, sort }
 }
