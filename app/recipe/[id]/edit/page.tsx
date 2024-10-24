@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import useRecipe from '@/hooks/recipe/useRecipe'
 import Polariod from '@/components/ui/Polariod'
+import { PaperInput } from '@/components/ui/Paper'
 
 export default function RecipePage({ params: { id } }: { params: { id: string } }) {
   const recipe = useRecipe(id)
@@ -21,7 +22,7 @@ export default function RecipePage({ params: { id } }: { params: { id: string } 
             priority
           />
         </div>
-        <div className="flex min-h-20 items-center justify-center text-center text-2xl text-neutral-950">{recipe.name}</div>
+        <div className="flex min-h-20 items-center justify-center text-center text-2xl text-neutral-950"><PaperInput defaultValue={recipe.name} /></div>
       </Polariod>
     </div>
   )

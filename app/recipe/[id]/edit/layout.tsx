@@ -16,9 +16,9 @@ export default async function RecipeLayout({
   const recipe = await prefetchRecipe(id)
   return (
     <HydrationBoundary state={recipe}>
-      <main className="-mt-5 flex h-full w-full flex-grow flex-col overflow-hidden pt-5">
+      <main className="mt-5 flex h-full w-full flex-grow flex-col overflow-y-auto pt-5 xl:overflow-hidden">
         <Suspense fallback="Loading...">{children}</Suspense>
-        <div className="grid h-full grid-cols-2 overflow-hidden p-5">
+        <div className="grid h-full grid-cols-1 px-5 pt-5 xl:grid-cols-5 xl:overflow-hidden">
           <Suspense fallback="Loading...">{ingredients}</Suspense>
           <Suspense fallback="Loading...">{methods}</Suspense>
         </div>

@@ -9,7 +9,7 @@ export default async function IngredientsPage({ params: { id } }: { params: { id
   const ingredients = await prefetchIngredients(id)
 
   return (
-    <div className="flex flex-col overflow-hidden">
+    <div className="flex flex-col xl:col-span-2 xl:overflow-hidden">
       <Paper>
         <div className="mb-7 underline underline-offset-4">Ingredients</div>
         <IngredientForm recipeId={id} />
