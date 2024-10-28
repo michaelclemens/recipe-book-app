@@ -37,9 +37,9 @@ export default function MethodForm({
   const editing = !!method
 
   const onSubmit = async (data: MethodFormFields) => {
-    editing ? await updateMethod(method.id, data) : await addMethod(data)
+    const response = editing ? await updateMethod(method.id, data) : await addMethod(data)
 
-    if (!editing) {
+    if (!editing && response) {
       reset()
       setFocus('step')
     }

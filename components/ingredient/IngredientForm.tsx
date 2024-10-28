@@ -38,9 +38,9 @@ export default function IngredientForm({
   const onSubmit = async (data: IngredientFormFields) => {
     try {
       const editing = !!ingredient
-      editing ? await updateIngredient(ingredient.id, data) : await addIngredient(data)
+      const response = editing ? await updateIngredient(ingredient.id, data) : await addIngredient(data)
 
-      if (!editing) {
+      if (!editing && response) {
         reset()
         setFocus('quantity')
       }

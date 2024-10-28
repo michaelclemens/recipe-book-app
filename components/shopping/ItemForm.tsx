@@ -29,9 +29,9 @@ export default function ItemForm({ listId, item, onDelete }: { listId: string; i
   const onSubmit = async (data: ItemFormFields) => {
     try {
       const editing = !!item
-      editing ? await update(item.id, data) : await add(data)
+      const response = editing ? await update(item.id, data) : await add(data)
 
-      if (!editing) {
+      if (!editing && response) {
         reset()
         setFocus('quantity')
       }

@@ -38,8 +38,9 @@ const PaperTextareaComponent = (props: TextareaProps & { error?: FieldError }, i
     <>
       <textarea
         ref={e => {
-          inputRef && typeof inputRef === 'function' && inputRef(e as unknown as RefCallBack)
-          textareaRef.current = e
+          if (inputRef && typeof inputRef === 'function' && inputRef(e as unknown as RefCallBack)) {
+            textareaRef.current = e
+          }
         }}
         rows={1}
         {...props}
