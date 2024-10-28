@@ -5,7 +5,13 @@ import IngredientForm from '@/components/ingredient/IngredientForm'
 import IngredientList from '@/components/ingredient/IngredientList'
 import Paper from '@/components/ui/Paper'
 
-export default async function IngredientsPage({ params: { id } }: { params: { id: string } }) {
+export default async function IngredientsPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
+
+  const {
+    id
+  } = params;
+
   const ingredients = await prefetchIngredients(id)
 
   return (

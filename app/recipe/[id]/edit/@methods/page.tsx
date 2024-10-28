@@ -5,7 +5,13 @@ import MethodForm from '@/components/method/MethodForm'
 import MethodList from '@/components/method/MethodList'
 import Paper from '@/components/ui/Paper'
 
-export default async function MethodsPage({ params: { id } }: { params: { id: string } }) {
+export default async function MethodsPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
+
+  const {
+    id
+  } = params;
+
   const methods = await prefetchMethods(id)
   return (
     <div className="flex flex-col xl:col-span-3 xl:overflow-hidden">

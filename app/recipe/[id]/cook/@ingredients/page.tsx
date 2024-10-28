@@ -3,7 +3,13 @@ import { Suspense } from 'react'
 import { prefetchIngredients } from '@/hooks/recipe/useIngredients'
 import IngredientSidebar from '@/components/ingredient/IngredientSidebar'
 
-export default async function CookRecipeIngredientPage({ params: { id } }: { params: { id: string } }) {
+export default async function CookRecipeIngredientPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
+
+  const {
+    id
+  } = params;
+
   const ingredients = await prefetchIngredients(id)
   return (
     <HydrationBoundary state={ingredients}>

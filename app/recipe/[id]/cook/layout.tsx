@@ -3,15 +3,24 @@ import { Suspense } from 'react'
 import { prefetchRecipe } from '@/hooks/recipe/useRecipe'
 import CookTimers from '@/components/cook/CookTimers'
 
-export default async function CookRecipeLayout({
-  params: { id },
-  children,
-  ingredients,
-}: {
-  params: { id: string }
-  children: React.ReactNode
-  ingredients: React.ReactNode
-}) {
+export default async function CookRecipeLayout(
+  props: {
+    params: Promise<{ id: string }>
+    children: React.ReactNode
+    ingredients: React.ReactNode
+  }
+) {
+  const params = await props.params;
+
+  const {
+    id
+  } = params;
+
+  const {
+    children,
+    ingredients
+  } = props;
+
   const recipe = await prefetchRecipe(id)
   return (
     <HydrationBoundary state={recipe}>

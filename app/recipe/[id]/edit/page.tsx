@@ -1,11 +1,18 @@
-'use client'
+'use client';
+import { use } from "react";
 
 import Image from 'next/image'
 import useRecipe from '@/hooks/recipe/useRecipe'
 import { PaperInput } from '@/components/ui/Paper'
 import Polariod from '@/components/ui/Polariod'
 
-export default function RecipePage({ params: { id } }: { params: { id: string } }) {
+export default function RecipePage(props: { params: Promise<{ id: string }> }) {
+  const params = use(props.params);
+
+  const {
+    id
+  } = params;
+
   const recipe = useRecipe(id)
   if (!recipe) return
   return (
