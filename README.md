@@ -14,7 +14,7 @@
 - 🖼️ [Framer Motion](https://www.framer.com/motion/)
 - 🌈 [Prisma ORM](https://www.prisma.io/docs/orm)
 - 🐘 [PostgreSQL 17](https://www.postgresql.org/docs/17/index.html) (docker-compose container)
-- 🃏 [Jest](https://jestjs.io/docs) + [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
+- 🤓 [Vitest](https://vitest.dev/guide/) + 🏛 [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
 - 📏 [ESLint](https://eslint.org/docs)
 - 💖 [Prettier](https://prettier.io/docs/en/)
 - 👷 [GitHub Actions](https://docs.github.com/en/actions) (CI + Dependabot config)

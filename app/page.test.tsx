@@ -1,11 +1,10 @@
 import { render } from '@testing-library/react'
 import Home from './page'
+import { describe, expect, test } from 'vitest'
 
-jest.mock('@/components/recipe/RecipeGallery')
-
-xdescribe('HomeComponent', () => {
-  it('Should render correctly', () => {
+describe('HomeComponent', () => {
+  test('Should render correctly', () => {
     const { getByText } = render(<Home />)
-    expect(getByText(/create new recipe/i)).toBeInTheDocument()
+    expect(getByText(/recipe book/i)).toBeDefined()
   })
 })
