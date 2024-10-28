@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react'
-import Home from './page'
 import { describe, expect, test } from 'vitest'
+import Home from './page'
 
 describe('HomeComponent', () => {
   test('Should render correctly', () => {
