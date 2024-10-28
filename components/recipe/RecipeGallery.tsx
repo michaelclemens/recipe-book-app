@@ -1,5 +1,6 @@
 'use client'
 
+import { graphql } from '@/gql'
 import { Recipe } from '@prisma/client'
 import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
@@ -10,6 +11,7 @@ import { FaMagnifyingGlass } from 'react-icons/fa6'
 import { GiHotMeal } from 'react-icons/gi'
 import useRecipes, { useRecipeMutations } from '@/hooks/recipe/useRecipes'
 import useFilterParams from '@/hooks/useFilterParams'
+import { useGraphQL } from '@/hooks/useGraphQL'
 import Loader from '../ui/Loader'
 import Pagination from '../ui/Pagination'
 import Polariod from '../ui/Polariod'
@@ -103,12 +105,24 @@ const SelectedRecipe = ({
   )
 }
 
+const allRecipesQueryDocument = graphql(/* GraphQL */ `
+  query MyQuery {
+    recipes {
+      id
+      name
+    }
+  }
+`)
+
 export default function RecipeGallery() {
   const { recipes, totalPages } = useRecipes()
   const { deleteRecipe } = useRecipeMutations()
   const {
     filter: { query },
   } = useFilterParams()
+
+  const { data } = useGraphQL(allRecipesQueryDocument)
+  console.log(data)
 
   const { push } = useRouter()
   const pathname = usePathname()
