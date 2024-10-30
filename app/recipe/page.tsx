@@ -6,12 +6,12 @@ import RecipeGallery from '@/components/recipe/RecipeGallery'
 
 // import { Button } from '@/components/ui'
 
-export default async function RecipeHome(props: { searchParams?: Promise<{ query?: string; page?: string }> }) {
-  const searchParams = await props.searchParams;
-  const query = searchParams?.query || undefined
+export default async function RecipeHome(props: { searchParams?: Promise<{ search?: string; page?: string }> }) {
+  const searchParams = await props.searchParams
+  const search = searchParams?.search || undefined
   const page = Number(searchParams?.page) || undefined
 
-  const recipes = await prefetchRecipes({ query, page })
+  const recipes = await prefetchRecipes({ search, page })
   return (
     <main className="h-full w-full xl:px-10">
       {/* <Link href="/recipe/create" className="ml-2">

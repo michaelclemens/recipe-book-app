@@ -47,7 +47,6 @@ export default function SortableList({
 
   useEffect(() => {
     if (initialItems.length !== items.length) {
-      console.log('vvv')
       setItems(initialItems)
     }
   }, [initialItems, items])

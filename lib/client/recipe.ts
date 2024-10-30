@@ -1,7 +1,6 @@
 'use server'
 
-import { Ingredient, Method, Recipe, Prisma } from '@prisma/client'
-import { revalidatePath } from 'next/cache'
+import { Ingredient, Method, Prisma } from '@prisma/client'
 import { notFound } from 'next/navigation'
 import { ZodError } from 'zod'
 import { IngredientFormFields, IngredientSchema, MethodFormFields, MethodSchema, RecipeFormFields, RecipeSchema } from '../formSchema'
@@ -29,23 +28,22 @@ export const createRecipe = async (data: RecipeFormFields) => {
   }
 }
 
-export const getRecipes = async ({ query, page, limit = 10 }: { query?: string; page?: number; limit?: number } = {}) => {
+export const getRecipes = async ({ searchString, page, take = 10 }: { searchString?: string; page?: number; take?: number } = {}) => {
   const where: Prisma.RecipeWhereInput = {}
-  if (query) {
-    where.name = { contains: query, mode: 'insensitive' }
+  if (searchString) {
+    where.name = { contains: searchString, mode: 'insensitive' }
   }
   try {
     const [count, recipes] = await prisma.$transaction([
       prisma.recipe.count({ where }),
       prisma.recipe.findMany({
         where,
-        skip: page && page > 1 ? (page - 1) * limit : undefined,
+        skip: page && page > 1 ? (page - 1) * take : undefined,
         orderBy: { createdAt: 'asc' },
-        take: limit,
+        take,
       }),
     ])
-
-    const totalPages = Math.ceil(count / limit)
+    const totalPages = Math.ceil(count / take)
     return { recipes, totalPages }
   } catch (error) {
     console.error(error)
@@ -62,10 +60,9 @@ export const getRecipe = async (id: string) => {
   }
 }
 
-export const deleteRecipe = async (recipe: Recipe) => {
+export const deleteRecipe = async (id: string) => {
   try {
-    await prisma.recipe.delete({ where: { id: recipe.id } })
-    revalidatePath('/recipe')
+    return await prisma.recipe.delete({ where: { id } })
   } catch (error) {
     console.error(error)
   }

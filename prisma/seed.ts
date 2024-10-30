@@ -41,7 +41,7 @@ const main = async () => {
 
     // await processExtraRecipes()
 
-    console.log(`Database has been seeded. 🌱`)
+    console.info(`Database has been seeded. 🌱`)
   } catch (error) {
     throw error
   }

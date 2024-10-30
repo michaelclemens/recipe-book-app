@@ -1,0 +1,32 @@
+fragment RecipeFragment on Recipe {
+  id
+  imageSrc
+  name
+}
+
+query GetRecipe($id: ID!) {
+  getRecipe(id: $id) {
+    ...RecipeFragment
+  }
+}
+
+query GetRecipes($input: QueryGetRecipesInput!) {
+  getRecipes(input: $input) {
+    recipes {
+      ...RecipeFragment
+    }
+    totalPages
+  }
+}
+
+mutation CreateRecipe($input: CreateRecipeInput!) {
+  createRecipe(input: $input) {
+    ...RecipeFragment
+  }
+}
+
+mutation DeleteRecipe($id: ID!) {
+  deleteRecipe(id: $id) {
+    ...RecipeFragment
+  }
+}

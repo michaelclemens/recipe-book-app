@@ -37,5 +37,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Prisma
+# prisma
 /prisma/seed-extra.ts
+
+# graphql-codegen
+/graphql/generated*

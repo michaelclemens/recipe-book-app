@@ -1,7 +1,6 @@
 'use client'
 
-import { graphql } from '@/gql'
-import { Recipe } from '@prisma/client'
+import { DeleteRecipeMutation, RecipeFragmentFragment } from '@/graphql/generated/graphql'
 import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
@@ -11,7 +10,6 @@ import { FaMagnifyingGlass } from 'react-icons/fa6'
 import { GiHotMeal } from 'react-icons/gi'
 import useRecipes, { useRecipeMutations } from '@/hooks/recipe/useRecipes'
 import useFilterParams from '@/hooks/useFilterParams'
-import { useGraphQL } from '@/hooks/useGraphQL'
 import Loader from '../ui/Loader'
 import Pagination from '../ui/Pagination'
 import Polariod from '../ui/Polariod'
@@ -21,9 +19,9 @@ const SelectedRecipe = ({
   onDeselect,
   onDelete,
 }: {
-  recipe: Recipe
+  recipe: RecipeFragmentFragment
   onDeselect: () => void
-  onDelete: (recipe: Recipe) => Promise<void>
+  onDelete: (recipe: RecipeFragmentFragment) => Promise<DeleteRecipeMutation>
 }) => {
   const { push } = useRouter()
   const [loading, setLoading] = useState(false)
@@ -69,15 +67,17 @@ const SelectedRecipe = ({
               </div>
             </button>
 
-            <Image
-              className="object-cover object-center"
-              src={recipe.imageSrc ?? ''}
-              alt={`Recipe ${recipe.name} image`}
-              quality={80}
-              fill
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              priority
-            />
+            {recipe.imageSrc && (
+              <Image
+                className="object-cover object-center"
+                src={recipe.imageSrc ?? ''}
+                alt={`Recipe ${recipe.name} image`}
+                quality={80}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                priority
+              />
+            )}
           </div>
           <div className="flex min-h-24 items-center justify-evenly text-2xl md:text-4xl">
             <button onClick={onEdit} title="Edit recipe" className="opacity-50 transition-opacity duration-300 hover:opacity-100">
@@ -105,28 +105,17 @@ const SelectedRecipe = ({
   )
 }
 
-const allRecipesQueryDocument = graphql(/* GraphQL */ `
-  query MyQuery {
-    recipes {
-      id
-      name
-    }
-  }
-`)
-
 export default function RecipeGallery() {
   const { recipes, totalPages } = useRecipes()
+
   const { deleteRecipe } = useRecipeMutations()
   const {
-    filter: { query },
+    filter: { search },
   } = useFilterParams()
-
-  const { data } = useGraphQL(allRecipesQueryDocument)
-  console.log(data)
 
   const { push } = useRouter()
   const pathname = usePathname()
-  const [recipe, setRecipe] = useState<Recipe | null>(null)
+  const [recipe, setRecipe] = useState<RecipeFragmentFragment | null>(null)
 
   const onSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -134,7 +123,7 @@ export default function RecipeGallery() {
     const search = formData.get('search')?.toString() ?? undefined
     if (search) {
       const params = new URLSearchParams()
-      params.set('query', search)
+      params.set('search', search)
       push(`${pathname}?${params.toString()}`)
     } else {
       push(pathname)
@@ -144,7 +133,7 @@ export default function RecipeGallery() {
   return (
     <>
       <form className="mb-10 flex w-full" onSubmit={onSearch}>
-        <input name="search" className="w-full text-neutral-950" placeholder="Search..." defaultValue={query ?? ''} />
+        <input name="search" className="w-full text-neutral-950" placeholder="Search..." defaultValue={search ?? ''} />
         <button type="submit" className="ml-5">
           <FaMagnifyingGlass />
         </button>
@@ -154,22 +143,24 @@ export default function RecipeGallery() {
         {recipes.map(recipe => (
           <Polariod key={recipe.id} className="group relative cursor-pointer" onClick={() => setRecipe(recipe)}>
             <div className="relative w-full flex-grow">
-              <Image
-                className="object-cover object-center brightness-90 transition-all duration-300 group-hover:brightness-110"
-                src={recipe.imageSrc ?? ''}
-                alt={`Recipe ${recipe.name} image`}
-                quality={60}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                priority
-              />
+              {recipe.imageSrc && (
+                <Image
+                  className="object-cover object-center brightness-90 transition-all duration-300 group-hover:brightness-110"
+                  src={recipe.imageSrc ?? ''}
+                  alt={`Recipe ${recipe.name} image`}
+                  quality={60}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  priority
+                />
+              )}
             </div>
             <div className="flex min-h-16 items-center justify-center text-center text-2xl text-neutral-950">{recipe.name}</div>
           </Polariod>
         ))}
         {recipe && <SelectedRecipe recipe={recipe} onDeselect={() => setRecipe(null)} onDelete={deleteRecipe} />}
       </div>
-      <div className="sticky bottom-0 left-0 flex w-full items-center justify-center bg-neutral-950 py-10">
+      <div className="sticky bottom-0 left-0 flex w-full items-center justify-center gap-x-5 bg-neutral-950 py-10">
         <Pagination totalPages={totalPages} />
       </div>
     </>

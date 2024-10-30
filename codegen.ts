@@ -1,20 +1,19 @@
 import type { CodegenConfig } from '@graphql-codegen/cli'
 import { printSchema } from 'graphql'
-import { schema } from './lib/schema'
+import { schema } from './graphql/schema'
 
 const config: CodegenConfig = {
   overwrite: true,
   schema: printSchema(schema),
-  documents: ['components/**/*.tsx', 'app/**/*.tsx'],
+  documents: 'graphql/documents/**/*.graphql',
+  ignoreNoDocuments: true,
+  hooks: { afterAllFileWrite: ['prettier --write'] },
   generates: {
-    './gql/': {
+    'graphql/generated/': {
       preset: 'client',
-      config: {
-        documentMode: 'string',
-      },
+      plugins: [],
     },
   },
-  hooks: { afterAllFileWrite: ['prettier --write'] },
 }
 
 export default config

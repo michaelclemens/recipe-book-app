@@ -8,19 +8,19 @@ export default function useFilterParams() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const page = searchParams.get('page') ? Number(searchParams.get('page')) : undefined
-  const query = searchParams.get('query') ?? undefined
+  const search = searchParams.get('search') ?? undefined
 
-  const form = useForm({ defaultValues: { search: query ?? undefined } })
+  const form = useForm({ defaultValues: { search } })
 
   const onSearch = async ({ search }: { search?: string }) => {
     if (search) {
       const params = new URLSearchParams()
-      params.set('query', search)
+      params.set('search', search)
       push(`${pathname}?${params.toString()}`)
     } else {
       push(pathname)
     }
   }
 
-  return { filter: { page, query }, form, onSearch }
+  return { filter: { page, search }, form, onSearch }
 }

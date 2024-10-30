@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { unitLabelMap } from '@/util/unit'
+import { unitLabelMap } from '../util/unit'
 
 export const RecipeSchema = z.object({
   name: z.string().min(1, { message: 'Recipe name is required' }),

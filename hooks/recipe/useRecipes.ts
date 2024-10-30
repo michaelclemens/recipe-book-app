@@ -1,22 +1,31 @@
-import { Recipe } from '@prisma/client'
+import { useFragment } from '@/graphql/generated'
+import {
+  CreateRecipeDocument,
+  DeleteRecipeDocument,
+  GetRecipesDocument,
+  RecipeFragmentFragment,
+  RecipeFragmentFragmentDoc,
+} from '@/graphql/generated/graphql'
 import { dehydrate, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useCallback } from 'react'
-import { createRecipe, getRecipes, deleteRecipe as clientDeleteRecipe } from '@/lib/client/recipe'
 import { RecipeFormFields } from '@/lib/formSchema'
+import getGraphQLClient from '@/lib/graphQLClient'
 import getQueryClient from '@/lib/queryClient'
-import { sortByDate } from '@/util/sort'
 import useFilterParams from '../useFilterParams'
 
 type filterParams = {
   page?: number
-  query?: string
+  search?: string
 }
 
+const graphQLClient = getGraphQLClient()
 const getQueryKey = (filter?: filterParams) => ['recipes', filter]
 
 export const prefetchRecipes = async (filter?: filterParams) => {
   const queryClient = getQueryClient()
-  await queryClient.prefetchQuery({ queryKey: getQueryKey(filter), queryFn: async () => getRecipes(filter) })
+  await queryClient.prefetchQuery({
+    queryKey: getQueryKey(filter),
+    queryFn: async () => graphQLClient.request(GetRecipesDocument, { input: { ...filter } }),
+  })
   return dehydrate(queryClient)
 }
 
@@ -26,39 +35,34 @@ export const useRecipeMutations = () => {
   const queryClient = useQueryClient()
 
   const addMutation = useMutation({
-    mutationFn: createRecipe,
-    onSuccess: newRecipe => {
-      queryClient.setQueryData(queryKey, ({ recipes }: { recipes: Recipe[] }) => [...recipes, newRecipe])
-      queryClient.invalidateQueries({ queryKey, refetchType: 'inactive' })
-    },
-  })
-
-  const deleteMutation = useMutation({
-    mutationFn: clientDeleteRecipe,
+    mutationFn: async (data: RecipeFormFields) => graphQLClient.request(CreateRecipeDocument, { input: data }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey })
     },
   })
 
-  const addRecipe = async (data: RecipeFormFields) => addMutation.mutateAsync(data)
-  const deleteRecipe = async (recipe: Recipe) => deleteMutation.mutateAsync(recipe)
+  const deleteMutation = useMutation({
+    mutationFn: async (recipe: RecipeFragmentFragment) => graphQLClient.request(DeleteRecipeDocument, { id: recipe.id }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey })
+    },
+  })
+
+  const addRecipe = async (data: RecipeFormFields) => {
+    const { createRecipe } = await addMutation.mutateAsync(data)
+    return createRecipe
+  }
+  const deleteRecipe = async (recipe: RecipeFragmentFragment) => deleteMutation.mutateAsync(recipe)
 
   return { addRecipe, deleteRecipe }
 }
 
 export default function useRecipes() {
   const { filter } = useFilterParams()
-  const queryKey = getQueryKey(filter)
-
   const { data } = useQuery({
-    queryKey,
-    placeholderData: { recipes: [], totalPages: 1 },
-    queryFn: async () => getRecipes(filter),
-    select: useCallback((data: { recipes: Recipe[]; totalPages: number }) => {
-      data.recipes.sort(sortByDate)
-      return data
-    }, []),
+    queryKey: getQueryKey(filter),
+    queryFn: async () => graphQLClient.request(GetRecipesDocument, { input: { ...filter } }),
   })
-
-  return { recipes: data?.recipes ?? [], totalPages: data?.totalPages ?? 1 }
+  const recipes = useFragment(RecipeFragmentFragmentDoc, data?.getRecipes.recipes ?? [])
+  return { recipes, totalPages: data?.getRecipes.totalPages ?? 1 }
 }
