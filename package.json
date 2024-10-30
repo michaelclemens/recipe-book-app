@@ -14,7 +14,8 @@
     "prettier:fix": "prettier --write .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "graphql:codegen": "graphql-codegen"
+    "codegen": "graphql-codegen",
+    "codegen:watch": "graphql-codegen --watch"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
@@ -44,6 +45,7 @@
     "@eslint/eslintrc": "^3.1.0",
     "@faker-js/faker": "^9.1.0",
     "@graphql-codegen/cli": "^5.0.3",
+    "@parcel/watcher": "^2.4.1",
     "@tailwindcss/forms": "^0.5.9",
     "@tailwindcss/typography": "^0.5.15",
     "@testing-library/dom": "^10.4.0",
