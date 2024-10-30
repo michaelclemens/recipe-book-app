@@ -5,7 +5,7 @@ import { prefetchLists } from '@/hooks/shopping/useLists'
 import ShoppingList from '@/components/shopping/ShoppingList'
 
 export default async function ShoppingHome(props: { searchParams?: Promise<{ query?: string; page?: string }> }) {
-  const searchParams = await props.searchParams;
+  const searchParams = await props.searchParams
   const query = searchParams?.query || undefined
   const page = Number(searchParams?.page) || undefined
 

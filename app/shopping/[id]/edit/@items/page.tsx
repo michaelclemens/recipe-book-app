@@ -8,11 +8,9 @@ import ListRecipes from '@/components/shopping/ListRecipes'
 import Paper from '@/components/ui/Paper'
 
 export default async function ItemsPage(props: { params: Promise<{ id: string }> }) {
-  const params = await props.params;
+  const params = await props.params
 
-  const {
-    id
-  } = params;
+  const { id } = params
 
   const items = await prefetchItems(id)
   const recipes = await prefetchListRecipes(id)

@@ -54,7 +54,7 @@ builder.queryFields(t => ({
       take: t.input.int({ required: true, defaultValue: 10 }),
       page: t.input.int({ required: true, defaultValue: 1 }),
     },
-    resolve: async (_, { input }) => getRecipes({ ...input, searchString: input.search ?? undefined })
+    resolve: async (_, { input }) => getRecipes({ ...input, searchString: input.search ?? undefined }),
   }),
 }))
 

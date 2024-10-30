@@ -4,11 +4,9 @@ import { prefetchRecipes } from '@/hooks/recipe/useRecipes'
 import RecipeSidebar from '@/components/recipe/RecipeSidebar'
 
 export default async function ShoppingListRecipePage(props: { params: Promise<{ id: string }> }) {
-  const params = await props.params;
+  const params = await props.params
 
-  const {
-    id
-  } = params;
+  const { id } = params
 
   const recipes = await prefetchRecipes()
   return (

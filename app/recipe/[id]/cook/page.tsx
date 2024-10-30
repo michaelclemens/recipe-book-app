@@ -4,11 +4,9 @@ import { prefetchMethods } from '@/hooks/recipe/useMethods'
 import MethodListGuided from '@/components/method/MethodListGuided'
 
 export default async function CookRecipePage(props: { params: Promise<{ id: string }> }) {
-  const params = await props.params;
+  const params = await props.params
 
-  const {
-    id
-  } = params;
+  const { id } = params
 
   const methods = await prefetchMethods(id)
   return (

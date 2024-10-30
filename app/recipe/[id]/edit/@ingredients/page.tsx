@@ -6,11 +6,9 @@ import IngredientList from '@/components/ingredient/IngredientList'
 import Paper from '@/components/ui/Paper'
 
 export default async function IngredientsPage(props: { params: Promise<{ id: string }> }) {
-  const params = await props.params;
+  const params = await props.params
 
-  const {
-    id
-  } = params;
+  const { id } = params
 
   const ingredients = await prefetchIngredients(id)
 

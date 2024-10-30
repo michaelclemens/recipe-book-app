@@ -2,25 +2,17 @@ import { HydrationBoundary } from '@tanstack/react-query'
 import { Suspense } from 'react'
 import { prefetchRecipe } from '@/hooks/recipe/useRecipe'
 
-export default async function RecipeLayout(
-  props: {
-    params: Promise<{ id: string }>
-    children: React.ReactNode
-    ingredients: React.ReactNode
-    methods: React.ReactNode
-  }
-) {
-  const params = await props.params;
+export default async function RecipeLayout(props: {
+  params: Promise<{ id: string }>
+  children: React.ReactNode
+  ingredients: React.ReactNode
+  methods: React.ReactNode
+}) {
+  const params = await props.params
 
-  const {
-    id
-  } = params;
+  const { id } = params
 
-  const {
-    children,
-    ingredients,
-    methods
-  } = props;
+  const { children, ingredients, methods } = props
 
   const recipe = await prefetchRecipe(id)
   return (
