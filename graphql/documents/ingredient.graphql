@@ -1,0 +1,41 @@
+fragment IngredientFragment on Ingredient {
+  id
+  recipeId
+  name
+  quantity
+  unit
+  optional
+  order
+}
+
+query GetIngredients($recipeId: ID!) {
+  getRecipe(id: $recipeId) {
+    ingredients {
+      ...IngredientFragment
+    }
+  }
+}
+
+mutation AddIngredient($recipeId: ID!, $input: IngredientInput!) {
+  addIngredient(recipeId: $recipeId, input: $input) {
+    ...IngredientFragment
+  }
+}
+
+mutation UpdateIngredient($id: ID!, $input: IngredientInput!) {
+  updateIngredient(id: $id, input: $input) {
+    ...IngredientFragment
+  }
+}
+
+mutation DeleteIngredient($id: ID!) {
+  deleteIngredient(id: $id) {
+    ...IngredientFragment
+  }
+}
+
+mutation SortIngredients($input: [SortOrderInput!]!) {
+  sortIngredients(input: $input) {
+    ...IngredientFragment
+  }
+}

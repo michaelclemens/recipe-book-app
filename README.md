@@ -1,21 +1,26 @@
 # Recipe Book App (WIP) ![GitHub CI](https://github.com/michaelclemens/recipe-book-app/actions/workflows/ci.yml/badge.svg)
 
-> [!WARNING] This is very much a Work In Progress
+> [!WARNING]
+> This is very much a Work In Progress
 
 ## Overview
 
 ### Stack
 
-- ⚡️ [Next.js 14 with App Router](https://nextjs.org/docs)
+- ⚡️ [Next.js 15 with App Router](https://nextjs.org/docs)
 - ⚛️ [React 18](https://18.react.dev/)
 - ✨ [TypeScript](https://www.typescriptlang.org/docs/)
 - 💨 [Tailwind CSS 3](https://tailwindcss.com/docs)
-- ❔[TanStack React Query](https://tanstack.com/query/latest/docs)
 - 🖼️ [Framer Motion](https://www.framer.com/motion/)
+- ❔[TanStack React Query](https://tanstack.com/query/latest/docs)
+- 📈 [GraphQL](https://graphql.org/learn/)
+  - 🧘 [GraphQL Yoga](https://the-guild.dev/graphql/yoga-server/docs)
+  - 🪴 [Pothos GraphQL](https://pothos-graphql.dev/)
+  - ⚙️ [GraphQL-Codegen](https://the-guild.dev/graphql/codegen/docs/getting-started)
 - 🌈 [Prisma ORM](https://www.prisma.io/docs/orm)
 - 🐘 [PostgreSQL 17](https://www.postgresql.org/docs/17/index.html) (docker-compose container)
 - 🤓 [Vitest](https://vitest.dev/guide/) + 🏛 [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
-- 📏 [ESLint](https://eslint.org/docs)
+- 📏 [ESLint 9](https://eslint.org/docs)
 - 💖 [Prettier](https://prettier.io/docs/en/)
 - 👷 [GitHub Actions](https://docs.github.com/en/actions) (CI + Dependabot config)
 

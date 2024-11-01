@@ -1,22 +1,28 @@
-import { Ingredient } from '@prisma/client'
-import { dehydrate, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useCallback } from 'react'
+import { getFragmentData } from '@/graphql/generated'
 import {
-  addIngredient as clientAddIngredient,
-  deleteIngredient as clientDeleteIngredient,
-  getIngredients,
-  updateIngredient as clientUpdateIngredient,
-  updateIngredientOrder,
-} from '@/lib/client/recipe'
+  AddIngredientDocument,
+  DeleteIngredientDocument,
+  GetIngredientsDocument,
+  GetIngredientsQuery,
+  IngredientFragmentFragment,
+  IngredientFragmentFragmentDoc,
+  SortIngredientsDocument,
+  UpdateIngredientDocument,
+} from '@/graphql/generated/graphql'
+import { dehydrate, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { IngredientFormFields } from '@/lib/formSchema'
+import getGraphQLClient from '@/lib/graphQLClient'
 import getQueryClient from '@/lib/queryClient'
-import { sortByOrder } from '@/util/sort'
 
+const graphQLClient = getGraphQLClient()
 const getQueryKey = (recipeId: string) => ['recipeIngredients', recipeId]
 
 export const prefetchIngredients = async (recipeId: string) => {
   const queryClient = getQueryClient()
-  await queryClient.prefetchQuery({ queryKey: getQueryKey(recipeId), queryFn: async () => getIngredients(recipeId) })
+  await queryClient.prefetchQuery({
+    queryKey: getQueryKey(recipeId),
+    queryFn: async () => graphQLClient.request(GetIngredientsDocument, { recipeId }),
+  })
   return dehydrate(queryClient)
 }
 
@@ -25,50 +31,67 @@ export const useIngredientMutations = (recipeId: string) => {
   const queryClient = useQueryClient()
 
   const addMutation = useMutation({
-    mutationFn: clientAddIngredient,
-    onSuccess: ingredient => {
-      queryClient.setQueryData(queryKey, (current: Ingredient[]) => [...current, ingredient])
+    mutationFn: async ({ recipeId, data }: { recipeId: string; data: IngredientFormFields }) =>
+      graphQLClient.request(AddIngredientDocument, { recipeId, input: data }),
+    onSuccess: ({ addIngredient }) => {
+      const ingredient = getFragmentData(IngredientFragmentFragmentDoc, addIngredient)
+      queryClient.setQueryData(queryKey, (current: GetIngredientsQuery) => ({
+        ...current,
+        getRecipe: { ingredients: [...getFragmentData(IngredientFragmentFragmentDoc, current.getRecipe?.ingredients ?? []), ingredient] },
+      }))
       queryClient.invalidateQueries({ queryKey, refetchType: 'inactive' })
     },
   })
 
   const updateMutation = useMutation({
-    mutationFn: clientUpdateIngredient,
-    onSuccess: ingredient => {
-      queryClient.setQueryData(queryKey, (current: Ingredient[]) => current.map(item => (item.id === ingredient.id ? ingredient : item)))
+    mutationFn: async ({ id, data }: { id: string; data: IngredientFormFields }) =>
+      graphQLClient.request(UpdateIngredientDocument, { id, input: data }),
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey, refetchType: 'inactive' })
     },
   })
 
   const deleteMutation = useMutation({
-    mutationFn: clientDeleteIngredient,
-    onSuccess: (_data, variables) => {
-      queryClient.setQueryData(queryKey, (current: Ingredient[]) => current.filter(item => item.id !== variables.id))
+    mutationFn: async (id: string) => graphQLClient.request(DeleteIngredientDocument, { id }),
+    onSuccess: (_, id) => {
+      queryClient.setQueryData(queryKey, (current: GetIngredientsQuery) => ({
+        ...current,
+        getRecipe: {
+          ingredients: getFragmentData(IngredientFragmentFragmentDoc, current.getRecipe?.ingredients ?? []).filter(item => item.id !== id),
+        },
+      }))
       queryClient.invalidateQueries({ queryKey, refetchType: 'inactive' })
     },
   })
 
   const sortMutation = useMutation({
-    mutationFn: updateIngredientOrder,
+    mutationFn: async (ingredients: IngredientFragmentFragment[]) =>
+      graphQLClient.request(SortIngredientsDocument, { input: ingredients.map(ingredient => ({ id: ingredient.id, order: ingredient.order })) }),
     onMutate: async sortedIngredients => {
       await queryClient.cancelQueries({ queryKey })
       const previous = queryClient.getQueriesData({ queryKey })
-      queryClient.setQueryData(queryKey, sortedIngredients)
+      queryClient.setQueryData(queryKey, (current: GetIngredientsQuery) => ({
+        ...current,
+        getRecipe: { ingredients: sortedIngredients },
+      }))
       return { previous }
     },
     onError: (_error, _variables, context) => {
       queryClient.setQueryData(queryKey, context?.previous)
     },
-    onSuccess: sortedIngredients => {
-      queryClient.setQueryData(queryKey, () => sortedIngredients)
+    onSuccess: ({ sortIngredients }) => {
+      queryClient.setQueryData(queryKey, (current: GetIngredientsQuery) => ({
+        ...current,
+        getRecipe: { ingredients: sortIngredients },
+      }))
       queryClient.invalidateQueries({ queryKey, refetchType: 'inactive' })
     },
   })
 
   const addIngredient = async (data: IngredientFormFields) => addMutation.mutateAsync({ recipeId, data })
   const updateIngredient = async (id: string, data: IngredientFormFields) => updateMutation.mutateAsync({ id, data })
-  const deleteIngredient = async (ingredient: Ingredient) => deleteMutation.mutateAsync(ingredient)
-  const sortIngredients = async (ingredients: Ingredient[]) => {
+  const deleteIngredient = async (ingredient: IngredientFragmentFragment) => deleteMutation.mutateAsync(ingredient.id)
+  const sortIngredients = async (ingredients: IngredientFragmentFragment[]) => {
     sortMutation.mutateAsync(ingredients)
   }
 
@@ -78,12 +101,10 @@ export const useIngredientMutations = (recipeId: string) => {
 export default function useIngredients(recipeId: string) {
   const queryKey = getQueryKey(recipeId)
 
-  const { data: ingredients } = useQuery({
+  const { data } = useQuery({
     queryKey,
-    placeholderData: [],
-    queryFn: async () => getIngredients(recipeId),
-    select: useCallback((data: Ingredient[]) => data.sort(sortByOrder), []),
+    queryFn: async () => graphQLClient.request(GetIngredientsDocument, { recipeId }),
   })
 
-  return ingredients ?? []
+  return getFragmentData(IngredientFragmentFragmentDoc, data?.getRecipe?.ingredients ?? [])
 }

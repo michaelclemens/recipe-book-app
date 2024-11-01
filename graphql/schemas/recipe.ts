@@ -1,6 +1,5 @@
-import { createRecipe, deleteRecipe, getRecipes } from '../../lib/client/recipe'
+import { createRecipe, deleteRecipe, getRecipes, getRecipe } from '../../lib/client/recipe'
 import { RecipeSchema } from '../../lib/formSchema'
-import prisma from '../../lib/prisma'
 import { builder } from '../builder'
 
 const recipeType = builder.prismaObject('Recipe', {
@@ -8,28 +7,13 @@ const recipeType = builder.prismaObject('Recipe', {
     id: t.exposeID('id'),
     name: t.exposeString('name'),
     imageSrc: t.exposeString('imageSrc', { nullable: true }),
-    ingredients: t.relation('ingredients'),
-    methods: t.relation('methods'),
+    ingredients: t.relation('ingredients', {
+      query: () => ({ orderBy: { order: 'asc' } }),
+    }),
+    methods: t.relation('methods', {
+      query: () => ({ orderBy: { order: 'asc' } }),
+    }),
     createdAt: t.expose('createdAt', { type: 'DateTime' }),
-  }),
-})
-
-builder.prismaObject('Ingredient', {
-  fields: t => ({
-    id: t.exposeID('id'),
-    recipeId: t.exposeID('recipeId'),
-    name: t.exposeString('name'),
-    quantity: t.exposeFloat('quantity', { nullable: true }),
-    unit: t.exposeString('unit', { nullable: true }),
-  }),
-})
-
-builder.prismaObject('Method', {
-  fields: t => ({
-    id: t.exposeID('id'),
-    recipeId: t.exposeID('recipeId'),
-    step: t.exposeString('step'),
-    stepTime: t.exposeInt('stepTime', { nullable: true }),
   }),
 })
 
@@ -45,7 +29,7 @@ builder.queryFields(t => ({
     type: 'Recipe',
     args: { id: t.arg.id({ required: true }) },
     nullable: true,
-    resolve: async (query, _, { id }) => prisma.recipe.findUnique({ ...query, where: { id } }),
+    resolve: async (_, __, { id }) => getRecipe(id),
   }),
   getRecipes: t.fieldWithInput({
     type: RecipesWithPagination,
@@ -58,7 +42,7 @@ builder.queryFields(t => ({
   }),
 }))
 
-const createRecipeInput = builder.inputType('CreateRecipeInput', {
+const recipeInput = builder.inputType('RecipeInput', {
   validate: { schema: RecipeSchema },
   fields: t => ({
     name: t.string({ required: true }),
@@ -68,7 +52,7 @@ const createRecipeInput = builder.inputType('CreateRecipeInput', {
 builder.mutationFields(t => ({
   createRecipe: t.prismaField({
     type: 'Recipe',
-    args: { input: t.arg({ type: createRecipeInput, required: true }) },
+    args: { input: t.arg({ type: recipeInput, required: true }) },
     resolve: async (_, __, { input }) => createRecipe({ ...input }),
   }),
   deleteRecipe: t.prismaField({

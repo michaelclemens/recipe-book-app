@@ -1,7 +1,7 @@
 fragment RecipeFragment on Recipe {
   id
-  imageSrc
   name
+  imageSrc
 }
 
 query GetRecipe($id: ID!) {
@@ -19,7 +19,7 @@ query GetRecipes($input: QueryGetRecipesInput!) {
   }
 }
 
-mutation CreateRecipe($input: CreateRecipeInput!) {
+mutation CreateRecipe($input: RecipeInput!) {
   createRecipe(input: $input) {
     ...RecipeFragment
   }

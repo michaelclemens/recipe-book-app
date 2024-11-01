@@ -1,6 +1,6 @@
 'use server'
 
-import { Ingredient, Method, Prisma } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 import { notFound } from 'next/navigation'
 import { ZodError } from 'zod'
 import { IngredientFormFields, IngredientSchema, MethodFormFields, MethodSchema, RecipeFormFields, RecipeSchema } from '../formSchema'
@@ -87,22 +87,25 @@ export const updateIngredient = async ({ id, data }: { id: string; data: Ingredi
   return prisma.ingredient.update({ where: { id }, data })
 }
 
-export const deleteIngredient = async (ingredient: Ingredient) => {
+export const deleteIngredient = async (id: string) => {
   try {
-    await prisma.ingredient.delete({ where: { id: ingredient.id } })
+    return await prisma.ingredient.delete({ where: { id } })
   } catch (error) {
     console.error(error)
   }
 }
 
-export const updateIngredientOrder = async (ingredients: Ingredient[]) => {
+export const updateIngredientOrder = async (data: { id: string; order?: number | null }[]) => {
+  const ingredients = []
   try {
-    for (const ingredient of ingredients) {
-      await prisma.ingredient.update({ where: { id: ingredient.id }, data: { order: ingredient.order } })
+    for (const { id, order } of data) {
+      const ingredient = await prisma.ingredient.update({ where: { id }, data: { order } })
+      ingredients.push(ingredient)
     }
-    return ingredients
   } catch (error) {
     console.error(error)
+  } finally {
+    return ingredients
   }
 }
 
@@ -141,21 +144,24 @@ export const updateMethod = async ({ id, data }: { id: string; data: MethodFormF
   }
 }
 
-export const deleteMethod = async (method: Method) => {
+export const deleteMethod = async (id: string) => {
   try {
-    await prisma.method.delete({ where: { id: method.id } })
+    return await prisma.method.delete({ where: { id } })
   } catch (error) {
     console.error(error)
   }
 }
 
-export const updateMethodOrder = async (methods: Method[]) => {
+export const updateMethodOrder = async (data: { id: string; order?: number | null }[]) => {
+  const methods = []
   try {
-    for (const method of methods) {
-      await prisma.method.update({ where: { id: method.id }, data: { order: method.order } })
+    for (const { id, order } of data) {
+      const method = await prisma.method.update({ where: { id }, data: { order } })
+      methods.push(method)
     }
-    return methods
   } catch (error) {
     console.error(error)
+  } finally {
+    return methods
   }
 }

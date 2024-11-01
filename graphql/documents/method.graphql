@@ -1,0 +1,39 @@
+fragment MethodFragment on Method {
+  id
+  recipeId
+  step
+  stepTime
+  order
+}
+
+query GetMethods($recipeId: ID!) {
+  getRecipe(id: $recipeId) {
+    methods {
+      ...MethodFragment
+    }
+  }
+}
+
+mutation AddMethod($recipeId: ID!, $input: MethodInput!) {
+  addMethod(recipeId: $recipeId, input: $input) {
+    ...MethodFragment
+  }
+}
+
+mutation UpdateMethod($id: ID!, $input: MethodInput!) {
+  updateMethod(id: $id, input: $input) {
+    ...MethodFragment
+  }
+}
+
+mutation DeleteMethod($id: ID!) {
+  deleteMethod(id: $id) {
+    ...MethodFragment
+  }
+}
+
+mutation SortMethods($input: [SortOrderInput!]!) {
+  sortMethods(input: $input) {
+    ...MethodFragment
+  }
+}

@@ -5,6 +5,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { FaBook, FaList, FaShoppingCart } from 'react-icons/fa'
 import { GiCook } from 'react-icons/gi'
+import recipeBG from '../public/backgrounds/recipe.jpg'
+import shoppingBG from '../public/backgrounds/shopping.jpg'
 
 const parentVariants = {
   hidden: { transition: { staggerChildren: 0.2 } },
@@ -48,9 +50,9 @@ export default function Home() {
             </div>
           </div>
           <Image
-            src="/backgrounds/recipe.jpg"
+            src={recipeBG}
+            placeholder="blur"
             fill
-            priority
             quality={80}
             alt="Recipe Image"
             className="z-0 object-cover object-bottom brightness-50 transition-all delay-150 duration-500 group-hover:brightness-100"
@@ -81,9 +83,9 @@ export default function Home() {
             </div>
           </div>
           <Image
-            src="/backgrounds/shopping.jpg"
+            src={shoppingBG}
+            placeholder="blur"
             fill
-            priority
             quality={80}
             alt="Shopping Image"
             className="z-0 object-cover object-top brightness-50 transition-all delay-150 duration-500 group-hover:brightness-100"

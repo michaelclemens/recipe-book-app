@@ -1,4 +1,4 @@
-import { useFragment } from '@/graphql/generated'
+import { getFragmentData } from '@/graphql/generated'
 import {
   CreateRecipeDocument,
   DeleteRecipeDocument,
@@ -63,6 +63,6 @@ export default function useRecipes() {
     queryKey: getQueryKey(filter),
     queryFn: async () => graphQLClient.request(GetRecipesDocument, { input: { ...filter } }),
   })
-  const recipes = useFragment(RecipeFragmentFragmentDoc, data?.getRecipes.recipes ?? [])
+  const recipes = getFragmentData(RecipeFragmentFragmentDoc, data?.getRecipes.recipes ?? [])
   return { recipes, totalPages: data?.getRecipes.totalPages ?? 1 }
 }

@@ -1,22 +1,25 @@
-import { Method } from '@prisma/client'
-import { dehydrate, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useCallback } from 'react'
+import { getFragmentData } from '@/graphql/generated'
 import {
-  addMethod as clientAddMethod,
-  updateMethod as clientUpdateMethod,
-  deleteMethod as clientDeleteMethod,
-  getMethods,
-  updateMethodOrder,
-} from '@/lib/client/recipe'
+  AddMethodDocument,
+  DeleteMethodDocument,
+  GetMethodsDocument,
+  GetMethodsQuery,
+  MethodFragmentFragment,
+  MethodFragmentFragmentDoc,
+  SortMethodsDocument,
+  UpdateMethodDocument,
+} from '@/graphql/generated/graphql'
+import { dehydrate, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { MethodFormFields } from '@/lib/formSchema'
+import getGraphQLClient from '@/lib/graphQLClient'
 import getQueryClient from '@/lib/queryClient'
-import { sortByOrder } from '@/util/sort'
 
+const graphQLClient = getGraphQLClient()
 const getQueryKey = (recipeId: string) => ['recipeMethods', recipeId]
 
 export const prefetchMethods = async (recipeId: string) => {
   const queryClient = getQueryClient()
-  await queryClient.prefetchQuery({ queryKey: getQueryKey(recipeId), queryFn: async () => getMethods(recipeId) })
+  await queryClient.prefetchQuery({ queryKey: getQueryKey(recipeId), queryFn: async () => graphQLClient.request(GetMethodsDocument, { recipeId }) })
   return dehydrate(queryClient)
 }
 
@@ -25,50 +28,66 @@ export const useMethodMutations = (recipeId: string) => {
   const queryClient = useQueryClient()
 
   const addMutation = useMutation({
-    mutationFn: clientAddMethod,
-    onSuccess: method => {
-      queryClient.setQueryData(queryKey, (current: Method[]) => [...current, method])
+    mutationFn: async ({ recipeId, data }: { recipeId: string; data: MethodFormFields }) =>
+      graphQLClient.request(AddMethodDocument, { recipeId, input: data }),
+    onSuccess: ({ addMethod }) => {
+      const ingredient = getFragmentData(MethodFragmentFragmentDoc, addMethod)
+      queryClient.setQueryData(queryKey, (current: GetMethodsQuery) => ({
+        ...current,
+        getRecipe: { methods: [...getFragmentData(MethodFragmentFragmentDoc, current.getRecipe?.methods ?? []), ingredient] },
+      }))
       queryClient.invalidateQueries({ queryKey, refetchType: 'inactive' })
     },
   })
 
   const updateMutation = useMutation({
-    mutationFn: clientUpdateMethod,
-    onSuccess: method => {
-      queryClient.setQueryData(queryKey, (current: Method[]) => current.map(item => (item.id === method.id ? method : item)))
+    mutationFn: async ({ id, data }: { id: string; data: MethodFormFields }) => graphQLClient.request(UpdateMethodDocument, { id, input: data }),
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey, refetchType: 'inactive' })
     },
   })
 
   const deleteMutation = useMutation({
-    mutationFn: clientDeleteMethod,
-    onSuccess: (_data, variables) => {
-      queryClient.setQueryData(queryKey, (current: Method[]) => current.filter(item => item.id !== variables.id))
+    mutationFn: async (id: string) => graphQLClient.request(DeleteMethodDocument, { id }),
+    onSuccess: (_, id) => {
+      queryClient.setQueryData(queryKey, (current: GetMethodsQuery) => ({
+        ...current,
+        getRecipe: {
+          methods: getFragmentData(MethodFragmentFragmentDoc, current.getRecipe?.methods ?? []).filter(item => item.id !== id),
+        },
+      }))
       queryClient.invalidateQueries({ queryKey, refetchType: 'inactive' })
     },
   })
 
   const sortMutation = useMutation({
-    mutationFn: updateMethodOrder,
+    mutationFn: async (methods: MethodFragmentFragment[]) =>
+      graphQLClient.request(SortMethodsDocument, { input: methods.map(method => ({ id: method.id, order: method.order })) }),
     onMutate: async sortedMethods => {
       await queryClient.cancelQueries({ queryKey })
       const previous = queryClient.getQueriesData({ queryKey })
-      queryClient.setQueryData(queryKey, sortedMethods)
+      queryClient.setQueryData(queryKey, (current: GetMethodsQuery) => ({
+        ...current,
+        getRecipe: { methods: sortedMethods },
+      }))
       return { previous }
     },
     onError: (_error, _variables, context) => {
       queryClient.setQueryData(queryKey, context?.previous)
     },
-    onSuccess: sortedMethods => {
-      queryClient.setQueryData(queryKey, () => sortedMethods)
+    onSuccess: ({ sortMethods }) => {
+      queryClient.setQueryData(queryKey, (current: GetMethodsQuery) => ({
+        ...current,
+        getRecipe: { methods: sortMethods },
+      }))
       queryClient.invalidateQueries({ queryKey, refetchType: 'inactive' })
     },
   })
 
   const addMethod = async (data: MethodFormFields) => addMutation.mutateAsync({ recipeId, data })
   const updateMethod = async (id: string, data: MethodFormFields) => updateMutation.mutateAsync({ id, data })
-  const deleteMethod = async (method: Method) => deleteMutation.mutateAsync(method)
-  const sortMethods = async (methods: Method[]) => {
+  const deleteMethod = async (method: MethodFragmentFragment) => deleteMutation.mutateAsync(method.id)
+  const sortMethods = async (methods: MethodFragmentFragment[]) => {
     await sortMutation.mutateAsync(methods)
   }
 
@@ -78,12 +97,10 @@ export const useMethodMutations = (recipeId: string) => {
 export default function useMethods(recipeId: string) {
   const queryKey = getQueryKey(recipeId)
 
-  const { data: methods } = useQuery({
+  const { data } = useQuery({
     queryKey,
-    placeholderData: [],
-    queryFn: async () => getMethods(recipeId),
-    select: useCallback((data: Method[]) => data.sort(sortByOrder), []),
+    queryFn: async () => graphQLClient.request(GetMethodsDocument, { recipeId }),
   })
 
-  return methods ?? []
+  return getFragmentData(MethodFragmentFragmentDoc, data?.getRecipe?.methods ?? [])
 }
