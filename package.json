@@ -34,7 +34,7 @@
     "graphql-scalars": "^1.23.0",
     "graphql-yoga": "^5.10.3",
     "jotai": "^2.10.3",
-    "next": "15.0.3",
+    "next": "15.1.2",
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.53.2",
