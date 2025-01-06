@@ -16,6 +16,7 @@ const nextConfig = {
       },
     ],
   },
+  serverExternalPackages: ['@whatwg-node'],
 }
 
 export default nextConfig
