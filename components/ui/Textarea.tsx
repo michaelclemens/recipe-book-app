@@ -13,7 +13,7 @@ export default forwardRef(function Textarea(props: TextareaProps & { error?: Fie
         ref={inputRef}
         {...inputProps}
         rows={3}
-        className={`${styles.input} ${props.className} block w-full rounded-md border-0 bg-slate-900 px-3 py-1.5 shadow-sm ring-1 ring-inset ring-slate-700 focus:ring-2 focus:ring-inset focus:ring-indigo-900`}
+        className={`${styles.input} ${props.className} block w-full rounded-md border-0 bg-slate-900 px-3 py-1.5 ring-1 shadow-sm ring-slate-700 ring-inset focus:ring-2 focus:ring-indigo-900 focus:ring-inset`}
       />
       <FieldErrorMessage error={error} />
     </div>

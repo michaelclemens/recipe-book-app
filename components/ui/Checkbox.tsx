@@ -15,7 +15,7 @@ export default forwardRef(function Checkbox(props: CheckboxProps & { label?: str
         <UiCheckbox
           ref={inputRef}
           {...inputProps}
-          className={`${styles.input} ${props.className} group size-6 rounded-md border-0 bg-slate-900 p-1 shadow-sm ring-1 ring-inset ring-slate-700 focus:ring-2 focus:ring-inset focus:ring-indigo-900`}
+          className={`${styles.input} ${props.className} group size-6 rounded-md border-0 bg-slate-900 p-1 ring-1 shadow-sm ring-slate-700 ring-inset focus:ring-2 focus:ring-indigo-900 focus:ring-inset`}
         >
           <FaCheck className="mx-auto mt-0.5 hidden size-3 text-green-500 group-data-[checked]:block" />
         </UiCheckbox>

@@ -8,7 +8,7 @@ export default function IngredientSidebar({ recipeId }: { recipeId: string }) {
   return (
     <Paper>
       <div className="mb-7 underline underline-offset-4">Ingredients</div>
-      <div className="h-full snap-y overflow-y-auto overflow-x-hidden pb-1 scrollbar scrollbar-track-transparent scrollbar-thumb-neutral-500/50">
+      <div className="scrollbar scrollbar-track-transparent scrollbar-thumb-neutral-500/50 h-full snap-y overflow-x-hidden overflow-y-auto pb-1">
         {ingredients.map(ingredient => (
           <div key={ingredient.id} className="flex snap-start gap-2">
             {ingredient.quantity && <div>{ingredient.quantity}</div>}

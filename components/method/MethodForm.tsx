@@ -65,7 +65,7 @@ export default function MethodForm({
         error={errors.stepTime}
       />
 
-      <div className="ml-2 mt-1 flex items-center justify-center gap-2 text-lg opacity-0 transition-opacity delay-100 duration-300 group-hover:opacity-100">
+      <div className="mt-1 ml-2 flex items-center justify-center gap-2 text-lg opacity-0 transition-opacity delay-100 duration-300 group-hover:opacity-100">
         {method ? (
           <>
             {onDelete && (

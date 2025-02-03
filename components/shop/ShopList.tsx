@@ -13,7 +13,7 @@ const ListRow = ({ item }: { item: Item | Ingredient }) => {
     <Field className="flex items-center">
       <Checkbox
         defaultChecked={false}
-        className="group peer mr-2 size-5 rounded-md p-1 ring-1 ring-inset ring-neutral-950/30 data-[checked]:bg-green-600/80 data-[checked]:ring-neutral-950/60 focus-visible:outline-none"
+        className="group peer mr-2 size-5 rounded-md p-1 ring-1 ring-neutral-950/30 ring-inset focus-visible:outline-none data-[checked]:bg-green-600/80 data-[checked]:ring-neutral-950/60"
       >
         <FaCheck className="size-3 text-white opacity-0 transition-opacity duration-150 group-data-[checked]:opacity-100" />
       </Checkbox>
@@ -34,7 +34,7 @@ export default function ShopList({ listId }: { listId: string }) {
 
   return (
     <div
-      className={`${caveat.className} mb-10 mt-5 flex h-full snap-y flex-row flex-wrap gap-8 overflow-y-auto pl-1 pr-2 text-3xl scrollbar scrollbar-track-transparent scrollbar-thumb-neutral-500/50`}
+      className={`${caveat.className} scrollbar scrollbar-track-transparent scrollbar-thumb-neutral-500/50 mt-5 mb-10 flex h-full snap-y flex-row flex-wrap gap-8 overflow-y-auto pr-2 pl-1 text-3xl`}
     >
       {list.recipes.map(recipe => (
         <div key={recipe.id} className="mb-2 flex snap-start flex-col">

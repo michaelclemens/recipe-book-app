@@ -49,7 +49,7 @@ export default function CookTimers() {
     <div className="flex h-full w-full flex-row overflow-hidden p-5">
       <div
         ref={ref}
-        className="flex w-full flex-wrap gap-5 overflow-y-auto overflow-x-hidden scrollbar scrollbar-track-transparent scrollbar-thumb-neutral-500/50"
+        className="scrollbar scrollbar-track-transparent scrollbar-thumb-neutral-500/50 flex w-full flex-wrap gap-5 overflow-x-hidden overflow-y-auto"
       >
         {cookTimers.sort().map(cookTimer => (
           <PostIt key={cookTimer.methodId}>
