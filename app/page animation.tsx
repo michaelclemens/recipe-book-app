@@ -113,17 +113,17 @@ export default function Home() {
               scale: 0.95,
               opacity: opened ? pageFlipOpacity : 1,
             }}
-            className={`flip-page absolute h-full w-full origin-left rounded-r-md border-b border-r border-slate-400/90 bg-neutral-300 shadow-lg`}
+            className={`flip-page absolute h-full w-full origin-left rounded-r-md border-r border-b border-slate-400/90 bg-neutral-300 shadow-lg`}
           />
         ))}
 
         <motion.div
           style={{ scale: 0.95, x: pageXPos, y: pageYPos, rotateX }}
-          className="page absolute left-0 top-0 z-0 h-full w-full rounded-r-md border-b border-r border-slate-400/90 bg-neutral-300 shadow-lg"
+          className="page absolute top-0 left-0 z-0 h-full w-full rounded-r-md border-r border-b border-slate-400/90 bg-neutral-300 shadow-lg"
         />
         <motion.div
           style={{ y: lastPageYPos, rotateX }}
-          className="last-page absolute left-0 top-0 -z-20 h-full w-full rounded-l-sm rounded-r-md bg-slate-800 shadow-xl shadow-black/30"
+          className="last-page absolute top-0 left-0 -z-20 h-full w-full rounded-l-sm rounded-r-md bg-slate-800 shadow-xl shadow-black/30"
         />
       </motion.div>
     </motion.main>

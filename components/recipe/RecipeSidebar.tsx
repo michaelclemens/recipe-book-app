@@ -23,7 +23,7 @@ export default function RecipeSidebar({ listId }: { listId: string }) {
           <FaMagnifyingGlass />
         </button>
       </form>
-      <div className="h-full snap-y overflow-y-auto overflow-x-hidden pb-1 scrollbar scrollbar-track-transparent scrollbar-thumb-neutral-500/50">
+      <div className="scrollbar scrollbar-track-transparent scrollbar-thumb-neutral-500/50 h-full snap-y overflow-x-hidden overflow-y-auto pb-1">
         {recipes.map(recipe => (
           <div key={recipe.id} className="group flex snap-start gap-2">
             <div className="w-full truncate">{recipe.name}</div>

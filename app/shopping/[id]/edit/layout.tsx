@@ -17,7 +17,7 @@ export default async function ShoppingLayout(props: {
   const list = await prefetchList(id)
   return (
     <HydrationBoundary state={list}>
-      <main className="flex h-full w-full flex-col overflow-y-auto overflow-x-hidden scrollbar scrollbar-track-transparent scrollbar-thumb-neutral-500/50">
+      <main className="scrollbar scrollbar-track-transparent scrollbar-thumb-neutral-500/50 flex h-full w-full flex-col overflow-x-hidden overflow-y-auto">
         <Suspense fallback="Loading...">{children}</Suspense>
         <div className="flex flex-row">
           <div className="flex w-full flex-col xl:w-1/4">

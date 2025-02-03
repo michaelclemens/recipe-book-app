@@ -70,7 +70,7 @@ export default function Paper({
     <motion.div {...motionProps} className={`${className} relative flex max-h-full p-5`}>
       {taped && <div className={`${styles.tape}`} />}
       <div className={`${styles.paper} ${lined ? styles.lined : ''} h-full w-full`}>
-        <div className={`${nothingYouCouldDo.className} flex h-full flex-col pb-7 pr-3 text-2xl leading-7 text-neutral-950`}>{children}</div>
+        <div className={`${nothingYouCouldDo.className} flex h-full flex-col pr-3 pb-7 text-2xl leading-7 text-neutral-950`}>{children}</div>
       </div>
     </motion.div>
   )

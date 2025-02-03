@@ -65,7 +65,7 @@ export default function SortableList({
       onReorder={setItems}
       values={items}
       layoutScroll
-      className={`z-10 -ml-8 h-full snap-y overflow-y-auto scrollbar scrollbar-track-transparent scrollbar-thumb-neutral-500/50 ${className}`}
+      className={`scrollbar scrollbar-track-transparent scrollbar-thumb-neutral-500/50 z-10 -ml-8 h-full snap-y overflow-y-auto ${className}`}
     >
       {items.map((item, index) => (
         <SortableItem key={item.id} item={item} onDragEnd={onDragEnd}>

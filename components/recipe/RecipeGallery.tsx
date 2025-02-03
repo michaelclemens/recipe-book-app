@@ -45,7 +45,7 @@ const SelectedRecipe = ({
 
   return (
     <AnimatePresence>
-      <div className="absolute left-0 top-0 mx-auto flex h-full w-full items-start justify-center md:items-center">
+      <div className="absolute top-0 left-0 mx-auto flex h-full w-full items-start justify-center md:items-center">
         <Polariod className="relative z-20 mx-5 mt-5 h-1/2 w-full pt-0 text-3xl text-neutral-950 md:mt-0 md:h-5/6 xl:mx-0 xl:w-1/2">
           <div className="flex min-h-24 py-2">
             <div className="flex w-full items-center justify-center text-center md:text-5xl">{recipe.name}</div>
@@ -98,7 +98,7 @@ const SelectedRecipe = ({
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         key="overlay"
-        className="fixed left-0 top-0 z-10 h-screen w-screen cursor-pointer bg-black/70"
+        className="fixed top-0 left-0 z-10 h-screen w-screen cursor-pointer bg-black/70"
         onClick={onDeselect}
       />
     </AnimatePresence>
@@ -139,7 +139,7 @@ export default function RecipeGallery() {
         </button>
       </form>
 
-      <div className="grid h-full grid-cols-1 gap-5 overflow-y-auto px-5 pb-px scrollbar scrollbar-track-transparent scrollbar-thumb-slate-800 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 xl:grid-rows-2 xl:px-0">
+      <div className="scrollbar scrollbar-track-transparent scrollbar-thumb-slate-800 grid h-full grid-cols-1 gap-5 overflow-y-auto px-5 pb-px sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 xl:grid-rows-2 xl:px-0">
         {recipes.map(recipe => (
           <Polariod key={recipe.id} className="group relative cursor-pointer" onClick={() => setRecipe(recipe)}>
             <div className="relative w-full flex-grow">
