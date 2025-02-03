@@ -11,7 +11,7 @@ export default forwardRef(function Select(props: SelectProps & { error?: FieldEr
       <UiSelect
         ref={inputRef}
         {...inputProps}
-        className="h-full rounded-md border-0 bg-transparent py-0 pl-3 pr-8 text-center focus:ring-2 focus:ring-inset focus:ring-indigo-900"
+        className="h-full rounded-md border-0 bg-transparent py-0 pr-8 pl-3 text-center focus:ring-2 focus:ring-indigo-900 focus:ring-inset"
       >
         {props.children}
       </UiSelect>

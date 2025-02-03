@@ -34,7 +34,7 @@ export default function Home() {
           className="fixed -ml-1 h-full w-full"
           style={{ clipPath: 'polygon(0 0, 100% 0, 0 100%)' }}
         >
-          <div className="absolute left-0 top-0 z-10 flex h-2/3 w-full items-center justify-center">
+          <div className="absolute top-0 left-0 z-10 flex h-2/3 w-full items-center justify-center">
             <div className="flex h-28 w-full items-center bg-black/50 pl-5">
               <div className="flex w-1/2 justify-center gap-5 text-white/50 transition-colors delay-150 duration-500 group-hover:text-white">
                 <span>Recipe Book</span>
@@ -67,7 +67,7 @@ export default function Home() {
           className="fixed ml-1 h-full w-full"
           style={{ clipPath: 'polygon(100% 0, 0 100%, 100% 100%)' }}
         >
-          <div className="absolute bottom-0 right-0 z-10 flex h-2/3 w-full items-center justify-center">
+          <div className="absolute right-0 bottom-0 z-10 flex h-2/3 w-full items-center justify-center">
             <div className="flex h-28 w-full items-center bg-black/50 pr-5">
               <div className="flex w-1/2 translate-x-full justify-center gap-5 text-white/50 transition-colors delay-150 duration-500 group-hover:text-white">
                 <div className="flex items-center gap-5 text-4xl">

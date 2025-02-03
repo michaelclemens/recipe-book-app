@@ -13,7 +13,7 @@ export default async function CookRecipeLayout(props: { params: Promise<{ id: st
   const recipe = await prefetchRecipe(id)
   return (
     <HydrationBoundary state={recipe}>
-      <main className="flex h-full w-full flex-col overflow-y-auto overflow-x-hidden scrollbar scrollbar-track-transparent scrollbar-thumb-neutral-500/50 xl:flex-row">
+      <main className="scrollbar scrollbar-track-transparent scrollbar-thumb-neutral-500/50 flex h-full w-full flex-col overflow-x-hidden overflow-y-auto xl:flex-row">
         <div className="flex w-full flex-col xl:w-1/4">
           <div className="h-full w-full xl:h-1/2">
             <Suspense fallback="Loading...">{ingredients}</Suspense>

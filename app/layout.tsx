@@ -17,7 +17,7 @@ export default function RootLayout({
     <ReactQueryClientProvider>
       <html lang="en">
         <body className={`flex h-screen w-screen flex-col overflow-hidden antialiased`}>
-          <header className="sticky left-0 top-0 z-10 flex w-full border-b-slate-400/20 bg-white/60 p-7 text-neutral-950 shadow-sm backdrop-blur-sm">
+          <header className="sticky top-0 left-0 z-10 flex w-full border-b-slate-400/20 bg-white/60 p-7 text-neutral-950 shadow-sm backdrop-blur-sm">
             <Link href="/" scroll={false}>
               Home
             </Link>
