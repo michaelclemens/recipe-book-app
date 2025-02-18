@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
-    "@hookform/resolvers": "^3.10.0",
+    "@hookform/resolvers": "^4.1.0",
     "@pothos/core": "^4.3.0",
     "@pothos/plugin-prisma": "^4.4.0",
     "@pothos/plugin-simple-objects": "^4.1.0",
